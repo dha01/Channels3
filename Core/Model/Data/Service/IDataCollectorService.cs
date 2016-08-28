@@ -14,5 +14,7 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		/// <param name="invoked_data"></param>
 		void Invoke(DataInvoke invoked_data);
+
+		object Get(Guid guid);
 	}
 }

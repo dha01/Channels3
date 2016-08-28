@@ -13,6 +13,8 @@ namespace Core.Model.Data.DataModel
 	/// </summary>
 	public class DataInvoke : DataBase
 	{
+		public bool IsRequestData { get; set; }
+		
 		/// <summary>
 		/// Тип исполнения.
 		/// </summary>
@@ -32,6 +34,7 @@ namespace Core.Model.Data.DataModel
 			: this(Guid.NewGuid())
 		{
 		}
+
 		public DataInvoke(object value)
 			: this(Guid.NewGuid(), value)
 		{

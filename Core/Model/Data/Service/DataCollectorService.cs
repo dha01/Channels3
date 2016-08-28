@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
+using Core.Model.Network.Service;
 
 namespace Core.Model.Data.Service
 {
+	/// <summary>
+	/// Сервис обработки входных данных.
+	/// </summary>
 	public class DataCollectorService : IDataCollectorService
 	{
 		#region Properties
@@ -27,6 +33,12 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		private readonly IDataService<DataInvoke> _dataService;
 
+		private readonly ISendRequestService _sendRequestService;
+
+		private readonly ConcurrentDictionary<Guid, ManualResetEvent> _requestedResults;
+
+		private readonly InvokeType _invokeType;
+
 		#endregion
 
 		#region Constructor
@@ -34,8 +46,8 @@ namespace Core.Model.Data.Service
 		/// <summary>
 		/// Инициализирует сервисы по умолчанию.
 		/// </summary>
-		public DataCollectorService()
-			: this(new InvokeServiceFactory(), new DataService<DataInvoke>())
+		public DataCollectorService(InvokeType invoke_type)
+			: this(invoke_type, new InvokeServiceFactory(), new DataService<DataInvoke>(), new SendRequestService())
 		{
 		}
 
@@ -44,12 +56,15 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		/// <param name="invoke_service_factory">Фабрика сервисов исполнения.</param>
 		/// <param name="data_service">Сервис для работы с данными.</param>
-		public DataCollectorService(IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service)
+		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, ISendRequestService send_request_service)
 		{
+			_invokeType = invoke_type;
 			_queueInvoker = new QueueInvoker<DataInvoke>(OnDequeue);
 			_invokeServiceFactory = invoke_service_factory;
 			_invokeServiceFactory.AddOnDequeueEvent(OnAfterInvoke);
 			_dataService = data_service;
+			_sendRequestService = send_request_service;
+			_requestedResults = new ConcurrentDictionary<Guid, ManualResetEvent>();
 		}
 
 		#endregion
@@ -63,6 +78,26 @@ namespace Core.Model.Data.Service
 		public void Invoke(DataInvoke invoked_data)
 		{
 			_queueInvoker.Enqueue(invoked_data);
+		}
+
+		public object Get(Guid guid)
+		{
+			var request_data = new DataInvoke(guid)
+			{
+				IsRequestData = true
+			};
+			
+			var manual_reset_event = new ManualResetEvent(false);
+			_requestedResults.TryAdd(guid, manual_reset_event);
+			Invoke(request_data);
+
+			manual_reset_event.WaitOne();
+			var result = _dataService.Get(guid);
+			if (result == null || !result.HasValue)
+			{
+				throw new Exception("Ошибка при запросе данных.");
+			}
+			return result.Value;
 		}
 
 		#endregion
@@ -81,7 +116,24 @@ namespace Core.Model.Data.Service
 				return DataState.Complite;
 			}
 
-			if (_dataService.Get(invoked_data.InputIds).All(x => x.HasValue))
+			var data_list = new List<DataInvoke>();
+
+			foreach (var id in invoked_data.InputIds)
+			{
+				var data = _dataService.Get(id);
+				if (data == null)
+				{
+					data = _sendRequestService.GetData(invoked_data.Sender, id);
+					if (data == null)
+					{
+						throw new Exception("DataCollectorService.GetState Ошибк апри получении данных для выполения функции.");
+					}
+					_dataService.Add(data);
+				}
+				data_list.Add(data);
+			}
+			
+			if (data_list.All(x => x.HasValue))
 			{
 				return DataState.ReadyForInvoke;
 			}
@@ -105,7 +157,7 @@ namespace Core.Model.Data.Service
 		/// <param name="invoked_data"></param>
 		private void OnAfterInvoke(DataInvoke invoked_data)
 		{
-			invoked_data.DataState = DataState.Complite;
+			//invoked_data.DataState = DataState.Complite;
 			Invoke(invoked_data);
 		}
 
@@ -116,13 +168,34 @@ namespace Core.Model.Data.Service
 		private void OnDequeue(DataInvoke invoked_data)
 		{
 			var exists_value = _dataService.Get(invoked_data.Id);
+			
+			// Запрос на возвращение данных.
+			if (invoked_data.IsRequestData)
+			{
+				if (exists_value == null || !exists_value.HasValue)
+				{
+					Invoke(invoked_data);
+					return;
+				}
+				
+				ManualResetEvent requested_result;
+				_requestedResults.TryRemove(invoked_data.Id, out requested_result);
+				if (requested_result != null)
+				{
+					requested_result.Set();
+				}
+				return;
+			}
 
+			// Запрос на добавление данных.
 			if (exists_value == null)
 			{
+				// Новое значение.
 				AddNewInvokedData(invoked_data);
 			}
 			else
 			{
+				// Смена состяния.
 				var new_state = GetState(invoked_data);
 				if (exists_value.DataState == new_state)
 				{
@@ -131,13 +204,14 @@ namespace Core.Model.Data.Service
 				exists_value.DataState = new_state;
 			}
 
+			// Действия в зависимости от состояния.
 			switch (invoked_data.DataState)
 			{
 				case DataState.NotReadyForInvoke:
-					throw new NotImplementedException();
+					CheckNotReadyValue(invoked_data);
 					break;
 				case DataState.ReadyForInvoke:
-					_invokeServiceFactory.GetInvokeService(invoked_data).Invoke(_dataService.FillData(invoked_data));
+					_invokeServiceFactory.GetInvokeService(invoked_data, _invokeType).Invoke(invoked_data);
 					break;
 				case DataState.Complite:
 					foreach (var data in _dataService.GetChilds(invoked_data.Id))
@@ -145,6 +219,34 @@ namespace Core.Model.Data.Service
 						Invoke(data);
 					}
 					break;
+			}
+		}
+
+		private void CheckNotReadyValue(DataInvoke invoked_data)
+		{
+			// TODO: лучше запускать отдельным потоком. И добавить обработку ошибок.
+			
+			foreach (var id in invoked_data.InputIds)
+			{
+				var value = _dataService.Get(id);
+				if (value == null)
+				{
+					if (invoked_data.Sender != null)
+					{
+						var data = _sendRequestService.GetData(invoked_data.Sender, id);
+
+						if (data == null)
+						{
+							throw new NotImplementedException("Запрошенные данные отсутствуют.");
+						}
+
+						_dataService.Add(data);
+					}
+					else
+					{
+						throw new NotImplementedException("Не указан отправитель.");
+					}
+				}
 			}
 		}
 

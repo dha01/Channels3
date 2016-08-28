@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Core.Model.Data.DataModel;
+using Core.Model.Data.Service;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
@@ -13,6 +15,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 		private IAssemblyService _assemblyService;
 
 		private IMethodService _methodService;
+		private IDataService<DataInvoke> _dataService; 
 		
 		protected override InvokeType InvokeType
 		{
@@ -23,29 +26,31 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 		}
 
 		public InvokeCSharpService()
-			:this(new AssemblyService(), new MethodService())
+			:this(new AssemblyService(), new MethodService(), new DataService<DataInvoke>())
 		{
 			
 		}
 
-		public InvokeCSharpService(IAssemblyService assembly_service, IMethodService method_service)
+		public InvokeCSharpService(IAssemblyService assembly_service, IMethodService method_service, IDataService<DataInvoke> data_service)
 		{
 			_assemblyService = assembly_service;
 			_methodService = method_service;
+			_dataService = data_service;
 		}
 
-		protected override void InvokeMethod(DataInvokeFilled invoked_data, Action<DataInvokeFilled> callback)
+		protected override void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback)
 		{
 			var method = (CSharpMethod)_methodService.GetMethod(invoked_data.MethodId);
-			var assembly = _assemblyService.GetAssemblyForMethod(method);
+			//var assembly = _assemblyService.GetAssemblyForMethod(method);
 
-			var t = assembly.GetType(method.TypeName);
-			var m = t.GetMethod(method.MethodName);
+			var t = method.MethodInfo.ReflectedType;// assembly.GetType(method.TypeName);
+			var m = method.MethodInfo;
 			var obj = Activator.CreateInstance(t);
 
 			try
 			{
-				invoked_data.Value = m.Invoke(obj, invoked_data.Inputs);
+				var inputs = invoked_data.InputIds.Select(x => _dataService.Get(x).Value).ToArray();
+				invoked_data.Value = m.Invoke(obj, inputs);
 			}
 			catch (Exception e)
 			{

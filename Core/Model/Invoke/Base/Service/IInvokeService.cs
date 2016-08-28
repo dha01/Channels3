@@ -12,12 +12,12 @@ namespace Core.Model.Invoke.Base.Service
 		/// <summary>
 		/// Событие после исполнения.
 		/// </summary>
-		Action<DataInvokeFilled> OnAfterInvoke { get; set; }
+		Action<DataInvoke> OnAfterInvoke { get; set; }
 		
 		/// <summary>
 		/// Отправка данных на исполнение.
 		/// </summary>
 		/// <param name="invoked_data">Данные для исполнения.</param>
-		void Invoke(DataInvokeFilled invoked_data);
+		void Invoke(DataInvoke invoked_data);
 	}
 }

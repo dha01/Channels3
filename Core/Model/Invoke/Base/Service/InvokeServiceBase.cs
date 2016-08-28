@@ -17,12 +17,12 @@ namespace Core.Model.Invoke.Base.Service
 		/// <summary>
 		/// Очередь на исполнение.
 		/// </summary>
-		private readonly QueueInvoker<DataInvokeFilled> _queueInvoker;
+		private readonly QueueInvoker<DataInvoke> _queueInvoker;
 
 		/// <summary>
 		/// Событие после исполнения.
 		/// </summary>
-		public Action<DataInvokeFilled> OnAfterInvoke { get; set; }
+		public Action<DataInvoke> OnAfterInvoke { get; set; }
 
 		/// <summary>
 		/// Тип исполнения.
@@ -44,7 +44,7 @@ namespace Core.Model.Invoke.Base.Service
 		/// </summary>
 		protected InvokeServiceBase()
 		{
-			_queueInvoker = new QueueInvoker<DataInvokeFilled>(OnDequeue);
+			_queueInvoker = new QueueInvoker<DataInvoke>(OnDequeue);
 		}
 
 		#endregion
@@ -55,7 +55,7 @@ namespace Core.Model.Invoke.Base.Service
 		/// Отправка данных на исполнение.
 		/// </summary>
 		/// <param name="invoked_data">Данные для исполнения.</param>
-		public void Invoke(DataInvokeFilled invoked_data)
+		public void Invoke(DataInvoke invoked_data)
 		{
 			switch (InvokeType)
 			{
@@ -78,13 +78,13 @@ namespace Core.Model.Invoke.Base.Service
 		/// </summary>
 		/// <param name="invoked_data"></param>
 		/// <param name="callback"></param>
-		protected abstract void InvokeMethod(DataInvokeFilled invoked_data, Action<DataInvokeFilled> callback);
+		protected abstract void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback);
 		
 		/// <summary>
 		/// Событие при извлечении из очереди.
 		/// </summary>
 		/// <param name="invoked_data">Данные для исполнения.</param>
-		private void OnDequeue(DataInvokeFilled invoked_data)
+		private void OnDequeue(DataInvoke invoked_data)
 		{
 			InvokeMethod(invoked_data, OnAfterInvoke);
 		}

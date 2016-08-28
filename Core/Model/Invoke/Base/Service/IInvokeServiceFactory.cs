@@ -15,6 +15,6 @@ namespace Core.Model.Invoke.Base.Service
 	{
 		void AddOnDequeueEvent(Action<DataInvoke> action);
 
-		IInvokeService GetInvokeService(DataInvoke invoked_data);
+		IInvokeService GetInvokeService(DataInvoke invoked_data, InvokeType invoke_type);
 	}
 }

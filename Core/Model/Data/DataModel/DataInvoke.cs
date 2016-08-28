@@ -38,7 +38,9 @@ namespace Core.Model.Data.DataModel
 			return new DataInvokeFilled(data_invoke.Id)
 			{
 				DataState = data_invoke.DataState,
-				Inputs = values
+				Inputs = values,
+				MethodId = data_invoke.MethodId,
+				InputIds = data_invoke.InputIds
 			};
 		}
 	}

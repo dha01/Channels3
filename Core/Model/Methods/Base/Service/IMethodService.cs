@@ -17,6 +17,8 @@ namespace Core.Model.Methods.Base.Service
 		/// <returns>Сервис для исполнения.</returns>
 		IInvokeService GetInvokeService(Guid guid);
 
+		void AddMethod(MethodBase method);
+
 		/// <summary>
 		/// Возвращает метод по идентификатору.
 		/// </summary>

@@ -28,6 +28,11 @@ namespace Core.Model.Methods.Base.Service
 			return new InvokeCSharpService();
 		}
 
+		public void AddMethod(MethodBase method)
+		{
+			_methodDictionary.Add(method.Id, method);
+		}
+
 		/// <summary>
 		/// Возвращает метод по идентификатору.
 		/// </summary>

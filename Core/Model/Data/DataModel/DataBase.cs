@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Model.Network.DataModel;
 
 namespace Core.Model.Data.DataModel
 {
@@ -12,6 +13,7 @@ namespace Core.Model.Data.DataModel
 		public Guid[] InputIds { get; set; }
 		private object _value { get; set; }
 
+		public Node Sender { get; set; }
 		public object Value
 		{
 			get

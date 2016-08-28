@@ -32,7 +32,7 @@ namespace Core.Model.Data.Service
 		/// <param name="invoke_data">Исполняемое значение.</param>
 		public void Add(T invoke_data)
 		{
-			foreach (var parent in _invokedDataDictionary.Where(x => x.Value.InputIds.Contains(x.Key)))
+			foreach (var parent in _invokedDataDictionary.Where(x => invoke_data.InputIds != null && invoke_data.InputIds.Contains(x.Key)))
 			{
 				List<Guid> list;
 				
@@ -72,7 +72,12 @@ namespace Core.Model.Data.Service
 		/// <returns>Список дочерних данных.</returns>
 		public IEnumerable<Guid> GetChildIds(Guid guid)
 		{
-			return _linkToChilds[guid];
+			if (_linkToChilds.ContainsKey(guid))
+			{
+				return _linkToChilds[guid];
+			}
+			
+			return new List<Guid>();
 		}
 
 		/// <summary>

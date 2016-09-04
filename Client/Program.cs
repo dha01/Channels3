@@ -19,30 +19,44 @@ namespace Client
 {
 	class Program
 	{
+		private static InvokeServerService _invokeServerService;
+		private static ISendRequestService _sendRequestService;
+		private static IDataService<DataInvoke> _dataService;
+		private static IDataCollectorService _dataCollectorService;
+		private static ICSharpAssemblyService _cSharpAssemblyService;
+		private static IAssemblyServiceFactory _assemblyServiceFactory;
+		private static IMethodService _methodService;
+		private static ICoordinationService _coordinationService;
+		private static IInvokeServiceFactory _invokeServiceFactory;
+
+		private static HttpServerBase _httpServerBase;
+		
 		static void Main(string[] args)
 		{
-			var v = typeof (SomeClass).GetMethods().First().GetParameters().First().ParameterType;
-			
-			var assembly_service = new AssemblyService();
-			var assembly_service_factory = new AssemblyServiceFactory(assembly_service);
-
-			var method_service = new MethodService(assembly_service_factory);
-			var coordination_service = new CoordinationService();
-			coordination_service.AddNode(new Node()
+			var remote_server_node = new Node()
 			{
-				IpAddress = "127.0.0.1",
-				Port = 1234
-			});
+				URL = "127.0.0.1",
+				Port = 12345
+			};
 
-			assembly_service.AddAssembly(typeof(SomeClass).Assembly);
+			var local_server_node = new Node()
+			{
+				URL = "127.0.0.1",
+				Port = 12354
+			};
 
-			var send_request_service = new SendRequestService();
+			_cSharpAssemblyService = new CSharpAssemblyService();
+			_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
+			_methodService = new MethodService(_assemblyServiceFactory);
+			_coordinationService = new CoordinationService();
+			_sendRequestService = new SendRequestService();
+			_dataService = new DataService<DataInvoke>();
+			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _sendRequestService, _dataService);
+			_dataCollectorService = new DataCollectorService(InvokeType.Remote, _invokeServiceFactory, _dataService, _sendRequestService);
+			_invokeServerService = new InvokeServerService(string.Format("http://127.0.0.1:{0}/", local_server_node.Port), _dataService, _dataCollectorService, _cSharpAssemblyService);
 
-			var data_service = new DataService<DataInvoke>();
-			var invoke_service_factory = new InvokeServiceFactory(method_service, assembly_service, coordination_service, send_request_service, data_service);
-
-
-			var data_collector = new DataCollectorService(InvokeType.Remote, invoke_service_factory, data_service, send_request_service);
+			_cSharpAssemblyService.AddAssembly(typeof(SomeClass).Assembly);
+			_coordinationService.AddNode(remote_server_node);
 
 			var method = new CSharpMethod()
 			{
@@ -53,30 +67,26 @@ namespace Client
 				InputParamsTypeNames = new[] { "System.Double", "System.Double" }
 			};
 
-			var _invokeServerService = new InvokeServerService(send_request_service, data_service, data_collector, assembly_service, new HttpServerBase(1235));
+			Console.WriteLine("Клиент");
 			Console.ReadKey();
 			int i = 0;
 			while (true)
 			{
 				i++;
 				var data_invoke_a = new DataInvoke(i);
-				data_collector.Invoke(data_invoke_a);
+				_dataCollectorService.Invoke(data_invoke_a);
 				var data_invoke_b = new DataInvoke(2);
-				data_collector.Invoke(data_invoke_b);
+				_dataCollectorService.Invoke(data_invoke_b);
 
 				var data_invoke_result = new DataInvoke()
 				{
 					Method = method,
 					InputIds = new[] { data_invoke_a.Id, data_invoke_b.Id },
 					InvokeType = InvokeType.Local,
-					Sender = new Node()
-					{
-						IpAddress = "127.0.0.1",
-						Port = 1235
-					}
+					Sender = local_server_node
 				};
 
-				data_collector.Invoke(data_invoke_result);
+				_dataCollectorService.Invoke(data_invoke_result);
 
 				/*
 				for (int j = 0; j < 1000; j++)
@@ -92,7 +102,7 @@ namespace Client
 					data_invoke_result = data_invoke_result2;
 				}*/
 
-				var result = data_collector.Get(data_invoke_result.Id);
+				var result = _dataCollectorService.Get(data_invoke_result.Id);
 
 				Console.WriteLine(result);
 

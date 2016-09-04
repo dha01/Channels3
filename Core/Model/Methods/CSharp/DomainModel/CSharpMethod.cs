@@ -11,12 +11,17 @@ namespace Core.Model.Methods.CSharp.DomainModel
 {
 	public class CSharpMethod : MethodBase
 	{
-		public override Type InvokeServiceType
+		public override Type MethodType
 		{
-			get { return typeof(InvokeCSharpService); }
+			get { return _methodType; }
 		}
 
 		public Type Type { get; set; }
 		public MethodInfo MethodInfo { get; set; }
+
+		public CSharpMethod()
+		{
+			_methodType = typeof (CSharpMethod);
+		}
 	}
 }

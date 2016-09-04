@@ -8,11 +8,16 @@ using Newtonsoft.Json;
 
 namespace Core.Model.Methods.Base.DomainModel
 {
+	/// <summary>
+	/// Базовое описание метода.
+	/// </summary>
 	public class MethodBase : AssemblyInfo
 	{
-		public virtual Type InvokeServiceType
+		protected Type _methodType;
+		public virtual Type MethodType
 		{
-			get { return typeof (InvokeServiceBase); } 
+			get { return _methodType; }
+			set { _methodType = value; }
 		}
 
 		public string TypeName { get; set; }

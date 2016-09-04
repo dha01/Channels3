@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Model.Server.Service
 {
-	interface ICoordinationServerService
+	public interface ICoordinationServerService
 	{
 	}
 }

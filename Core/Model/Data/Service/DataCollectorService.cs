@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
@@ -16,7 +15,7 @@ namespace Core.Model.Data.Service
 	/// </summary>
 	public class DataCollectorService : IDataCollectorService
 	{
-		#region Properties
+		#region Fields
 
 		/// <summary>
 		/// Очередь на исполнение.
@@ -37,6 +36,9 @@ namespace Core.Model.Data.Service
 
 		private readonly ConcurrentDictionary<Guid, ManualResetEvent> _requestedResults;
 
+		/// <summary>
+		/// Тип исполнения.
+		/// </summary>
 		private readonly InvokeType _invokeType;
 
 		#endregion
@@ -44,16 +46,9 @@ namespace Core.Model.Data.Service
 		#region Constructor
 
 		/// <summary>
-		/// Инициализирует сервисы по умолчанию.
-		/// </summary>
-		/*public DataCollectorService(InvokeType invoke_type)
-			: this(invoke_type, new InvokeServiceFactory(), new DataService<DataInvoke>(), new SendRequestService())
-		{
-		}*/
-
-		/// <summary>
 		/// Иничиализирует с указанными сервисами.
 		/// </summary>
+		/// <param name="invoke_type">Тип исполнения.</param>
 		/// <param name="invoke_service_factory">Фабрика сервисов исполнения.</param>
 		/// <param name="data_service">Сервис для работы с данными.</param>
 		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, ISendRequestService send_request_service)
@@ -69,17 +64,22 @@ namespace Core.Model.Data.Service
 
 		#endregion
 
-		#region Methods / Public
+		#region Methods/Public
 
 		/// <summary>
-		/// Новый узел для вычисления.
+		/// Добавляет вычисляемые данные.
 		/// </summary>
-		/// <param name="invoked_data"></param>
+		/// <param name="invoked_data">Вычисляемые данные.</param>
 		public void Invoke(DataInvoke invoked_data)
 		{
 			_queueInvoker.Enqueue(invoked_data);
 		}
 
+		/// <summary>
+		/// Возвращает результат вычисления вычисляемых данных с указанным идентфииктаором.
+		/// </summary>
+		/// <param name="guid">Идентфиикатор вычисляемых данных.</param>
+		/// <returns>Результат вычисления.</returns>
 		public object Get(Guid guid)
 		{
 			var request_data = new DataInvoke(guid)
@@ -102,7 +102,7 @@ namespace Core.Model.Data.Service
 
 		#endregion
 
-		#region Methods / Private
+		#region Methods/Private
 
 		/// <summary>
 		/// Возвращает актуальное состояние для исполняемых данных.
@@ -157,7 +157,6 @@ namespace Core.Model.Data.Service
 		/// <param name="invoked_data"></param>
 		private void OnAfterInvoke(DataInvoke invoked_data)
 		{
-			//invoked_data.DataState = DataState.Complite;
 			Invoke(invoked_data);
 		}
 
@@ -222,6 +221,11 @@ namespace Core.Model.Data.Service
 			}
 		}
 
+		/// <summary>
+		/// Проверяет наличие всех входных параметров в хранилище данных.
+		/// Если в хранилище данных нет требуемого параметра, то запращивает их у отправителя вычисляемого значения.
+		/// </summary>
+		/// <param name="invoked_data">Вычиляемое значение.</param>
 		private void CheckNotReadyValue(DataInvoke invoked_data)
 		{
 			// TODO: лучше запускать отдельным потоком. И добавить обработку ошибок.

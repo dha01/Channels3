@@ -3,26 +3,35 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Core.Model.Invoke.Local.CSharp.Service;
 using Core.Model.Methods.Base.DomainModel;
+using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.DomainModel;
 
 namespace Core.Model.Methods.CSharp.Service
 {
-	public class AssemblyService : IAssemblyService
+	public class CSharpAssemblyService : ICSharpAssemblyService
 	{
-		private Dictionary<string, AssemblyFile> _assemblyFiles;
-		private Dictionary<string, Assembly> _assemblies;
+		private readonly Dictionary<string, AssemblyFile> _assemblyFiles;
+		private readonly Dictionary<string, Assembly> _assemblies;
 
-		public AssemblyService()
+		public CSharpAssemblyService()
 		{
 			_assemblies = new Dictionary<string, Assembly>();
 			_assemblyFiles = new Dictionary<string, AssemblyFile>();
 		}
 
-		public AssemblyFile GetAssemblyFile(string path)
+		public CSharpAssemblyService(IEnumerable<string> paths) 
+			: this()
 		{
-			return _assemblyFiles.ContainsKey(path) ? _assemblyFiles[path] : null;
+			foreach (var path in paths)
+			{
+				AddAssembly(path);
+			}
+		}
+
+		public AssemblyFile GetAssemblyFile(string full_assembly_name)
+		{
+			return _assemblyFiles.ContainsKey(full_assembly_name) ? _assemblyFiles[full_assembly_name] : null;
 		}
 
 		public Assembly GetAssembly(string path)
@@ -37,12 +46,10 @@ namespace Core.Model.Methods.CSharp.Service
 			{
 				throw new Exception("Не найдено библиотеки.");
 			}
-			var types = assembly.GetTypes();
+
 			var type = assembly.GetType(method_base.TypeName);
-			var d = Type.GetType("System.Double");
-			var ds = Type.GetType("double");
-			var x = method_base.InputParamsTypeNames.Select(Type.GetType).ToArray();
-			var method_info = type.GetMethod(method_base.MethodName, x);
+			var input_param_types = method_base.InputParamsTypeNames.Select(Type.GetType).ToArray();
+			var method_info = type.GetMethod(method_base.MethodName, input_param_types);
 
 			return new CSharpMethod()
 			{
@@ -75,28 +82,28 @@ namespace Core.Model.Methods.CSharp.Service
 			_assemblies.Add(assembly_file.AssemblyPath, assembly);
 		}
 
-		public void AddAssembly(Assembly assembly)
+		public void AddAssembly(byte[] bytes)
 		{
+			var assembly = Assembly.Load(bytes);
+
 			var assembly_file = new AssemblyFile
 			{
-				Data = File.ReadAllBytes(assembly.Location),
+				Data = bytes,
 				Version = assembly.GetName().Version.ToString(),
 				Namespace = assembly.GetName().Name
 			};
-			
-			if (_assemblies.ContainsKey(assembly_file.AssemblyPath))
-			{
-				return;
-			}
-
-			_assemblies.Add(assembly_file.AssemblyPath, assembly);
-
-			if (_assemblyFiles.ContainsKey(assembly_file.AssemblyPath))
-			{
-				return;
-			}
 
 			AddAssembly(assembly_file);
+		}
+
+		public void AddAssembly(string path)
+		{
+			AddAssembly(File.ReadAllBytes(path));
+		}
+
+		public void AddAssembly(Assembly assembly)
+		{
+			AddAssembly(assembly.Location);
 		}
 	}
 }

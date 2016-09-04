@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
 
 namespace Core.Model.Data.Service
 {
@@ -14,8 +9,18 @@ namespace Core.Model.Data.Service
 	/// </summary>
 	public interface IDataService<T>  where T : DataBase
 	{
+		/// <summary>
+		/// Возвращает перичесления данных с указанными идентификаторами.
+		/// </summary>
+		/// <param name="guid">Перечисление идентификаторов данных.</param>
+		/// <returns>Перичесления данных.</returns>
 		IEnumerable<T> Get(IEnumerable<Guid> guid);
 
+		/// <summary>
+		/// Возвращает данные с указанным идентификатором.
+		/// </summary>
+		/// <param name="guid">Идентификатор данных.</param>
+		/// <returns>Данные.</returns>
 		T Get(Guid guid);
 		
 		/// <summary>
@@ -37,12 +42,5 @@ namespace Core.Model.Data.Service
 		/// <param name="guid">Идентификатор родительских данных.</param>
 		/// <returns>Список дочерних данных.</returns>
 		IEnumerable<T> GetChilds(Guid guid);
-
-		/// <summary>
-		/// Возвращает заполненные исполняемые данные.
-		/// </summary>
-		/// <param name="data_invoke">Исполняемые данные.</param>
-		/// <returns>Заполненные исполняемые данные.</returns>
-	/*	DataInvokeFilled FillData(DataInvoke data_invoke);*/
 	}
 }

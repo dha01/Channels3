@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Methods.CSharp.Service;
+﻿using Core.Model.Methods.Base.DomainModel;
 
 namespace Core.Model.Methods.Base.Service
 {
+	/// <summary>
+	/// Интерфейс фабрики сервиса пространства имен.
+	/// </summary>
 	public interface IAssemblyServiceFactory
 	{
+		/// <summary>
+		/// Возвращает пространство имен для метода.
+		/// </summary>
+		/// <param name="method_base">Исполняемый метод.</param>
+		/// <returns>Сервис пространства имен.</returns>
 		IAssemblyService GetAssemblyService(MethodBase method_base);
-
 	}
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
 
@@ -76,8 +73,8 @@ namespace Core.Model.Invoke.Base.Service
 		/// <summary>
 		/// Исполнение метода.
 		/// </summary>
-		/// <param name="invoked_data"></param>
-		/// <param name="callback"></param>
+		/// <param name="invoked_data">Исполняемые данные.</param>
+		/// <param name="callback">Функция, вызываемая по окончанию исполнения.</param>
 		protected abstract void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback);
 		
 		/// <summary>
@@ -92,7 +89,7 @@ namespace Core.Model.Invoke.Base.Service
 		/// <summary>
 		/// Автоматический выбор типа исполнения.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Тип исполнения.</returns>
 		protected InvokeType GetAutoInvokeType()
 		{
 			return InvokeType.Local;

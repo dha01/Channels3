@@ -23,7 +23,7 @@ namespace Core.Model.Methods.Base.Service
 		
 		public IAssemblyService GetAssemblyService(MethodBase method_base)
 		{
-			var method_type = method_base.GetType();
+			var method_type = method_base.MethodType;
 			
 			if (_assemblyServices.ContainsKey(method_type))
 			{

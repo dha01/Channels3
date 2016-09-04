@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Model\Data\DataModel\DataBase.cs" />
-    <Compile Include="Model\Data\DataModel\DataInvokeFilled.cs" />
     <Compile Include="Model\Data\DataModel\DataState.cs" />
     <Compile Include="Model\Data\Service\DataService.cs" />
     <Compile Include="Model\Data\Service\IDataService.cs" />
@@ -74,18 +73,23 @@
     <Compile Include="Model\Methods\Base\Service\MethodService.cs" />
     <Compile Include="Model\Methods\CSharp\DomainModel\CSharpMethod.cs" />
     <Compile Include="Model\Methods\CSharp\DomainModel\CSharpAssemblyInfo.cs" />
-    <Compile Include="Model\Methods\CSharp\Service\AssemblyService.cs" />
-    <Compile Include="Model\Methods\CSharp\Service\IAssemblyService.cs" />
+    <Compile Include="Model\Methods\CSharp\Service\CSharpAssemblyService.cs" />
+    <Compile Include="Model\Methods\Base\Service\IAssemblyService.cs" />
+    <Compile Include="Model\Methods\CSharp\Service\ICSharpAssemblyService.cs" />
     <Compile Include="Model\Network\DataModel\Node.cs" />
     <Compile Include="Model\Network\DataModel\Request.cs" />
     <Compile Include="Model\Network\DataModel\RequestType.cs" />
+    <Compile Include="Model\Network\DataModel\WebClass.cs" />
+    <Compile Include="Model\Network\DataModel\WebMethodAttribute.cs" />
     <Compile Include="Model\Network\Service\CoordinationService.cs" />
     <Compile Include="Model\Network\Service\HttpServerBase.cs" />
+    <Compile Include="Model\Network\Service\HttpServerService.cs" />
     <Compile Include="Model\Network\Service\ICoordinationService.cs" />
     <Compile Include="Model\Network\Service\IReceiveRequestService.cs" />
     <Compile Include="Model\Network\Service\ISendRequestService.cs" />
-    <Compile Include="Model\Network\Service\ReceiveRequestService.cs" />
+    <Compile Include="Model\Network\Service\IWebServerService.cs" />
     <Compile Include="Model\Network\Service\SendRequestService.cs" />
+    <Compile Include="Model\Network\Service\WebServerBase.cs" />
     <Compile Include="Model\QueueInvoker.cs" />
     <Compile Include="Model\Server\Service\ICoordinationServerService.cs" />
     <Compile Include="Model\Server\Service\IInvokeServerService.cs" />

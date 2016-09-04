@@ -26,7 +26,7 @@ namespace Core.Model.Network.Service
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(assembly_file_id));
 
-				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/GetAssemblyFile", receive_node.IpAddress, receive_node.Port), content);
+				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/GetAssemblyFile", receive_node.URL, receive_node.Port), content);
 
 				var responseString = response.Result.Content.ReadAsStringAsync().Result;
 
@@ -40,7 +40,7 @@ namespace Core.Model.Network.Service
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(guid));
 
-				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/GetData", receive_node.IpAddress, receive_node.Port), content);
+				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/GetData", receive_node.URL, receive_node.Port), content);
 
 				var responseString = response.Result.Content.ReadAsStringAsync().Result;
 
@@ -54,7 +54,7 @@ namespace Core.Model.Network.Service
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(data_invoke));
 
-				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/AddData", receive_node.IpAddress, receive_node.Port), content);
+				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/AddData", receive_node.URL, receive_node.Port), content);
 
 				var responseString = response.Result.Content.ReadAsStringAsync().Result;
 			}

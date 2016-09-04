@@ -64,10 +64,16 @@
     <Compile Include="Model\Invoke\Base\Service\InvokeServiceFactory.cs" />
     <Compile Include="Model\Invoke\Base\Service\InvokeServiceBase.cs" />
     <Compile Include="Model\Invoke\Remote\Service\InvokeRemoteService.cs" />
+    <Compile Include="Model\Methods\Base\DomainModel\AssemblyFile.cs" />
+    <Compile Include="Model\Methods\Base\DomainModel\AssemblyInfo.cs" />
     <Compile Include="Model\Methods\Base\DomainModel\MethodBase.cs" />
+    <Compile Include="Model\Methods\Base\DomainModel\InvokeMethodInfo.cs" />
+    <Compile Include="Model\Methods\Base\Service\AssemblyServiceFactory.cs" />
+    <Compile Include="Model\Methods\Base\Service\IAssemblyServiceFactory.cs" />
     <Compile Include="Model\Methods\Base\Service\IMethodService.cs" />
     <Compile Include="Model\Methods\Base\Service\MethodService.cs" />
     <Compile Include="Model\Methods\CSharp\DomainModel\CSharpMethod.cs" />
+    <Compile Include="Model\Methods\CSharp\DomainModel\CSharpAssemblyInfo.cs" />
     <Compile Include="Model\Methods\CSharp\Service\AssemblyService.cs" />
     <Compile Include="Model\Methods\CSharp\Service\IAssemblyService.cs" />
     <Compile Include="Model\Network\DataModel\Node.cs" />

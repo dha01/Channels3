@@ -27,11 +27,11 @@ namespace Core.Model.Invoke.Base.Service
 		private readonly ISendRequestService _sendRequestService;
 
 		private readonly IDataService<DataInvoke> _dataService; 
-
+		/*
 		public InvokeServiceFactory()
 			: this(new MethodService(), new AssemblyService(), new CoordinationService(), new SendRequestService(), new DataService<DataInvoke>())
 		{
-		}
+		}*/
 
 		public void AddOnDequeueEvent(Action<DataInvoke> action)
 		{
@@ -66,13 +66,13 @@ namespace Core.Model.Invoke.Base.Service
 						case InvokeType.Remote:
 							return _serviceDictionary[typeof(RemoteInvokeService)];
 						case InvokeType.Local:
-							return _serviceDictionary[_methodService.GetMethod(invoked_data.MethodId).InvokeServiceType];
+							return _serviceDictionary[_methodService.GetMethod(invoked_data.Method).InvokeServiceType];
 					}
 					break;
 				case InvokeType.Remote:
 					return _serviceDictionary[typeof(RemoteInvokeService)];
 				case InvokeType.Local:
-					return _serviceDictionary[_methodService.GetMethod(invoked_data.MethodId).InvokeServiceType];
+					return _serviceDictionary[_methodService.GetMethod(invoked_data.Method).InvokeServiceType];
 			}
 			
 			

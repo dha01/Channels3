@@ -5,18 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.DomainModel;
+using Core.Model.Network.DataModel;
 
 namespace Core.Model.Methods.Base.Service
 {
 	public interface IMethodService
 	{
-		/// <summary>
-		/// Возвращает сервис для исполнения метода.
-		/// </summary>
-		/// <param name="guid">Идентификатор метода.</param>
-		/// <returns>Сервис для исполнения.</returns>
-		IInvokeService GetInvokeService(Guid guid);
-
 		void AddMethod(MethodBase method);
 
 		/// <summary>
@@ -24,6 +18,6 @@ namespace Core.Model.Methods.Base.Service
 		/// </summary>
 		/// <param name="guid">Идентификатор метода.</param>
 		/// <returns>Сервис для исполнения.</returns>
-		MethodBase GetMethod(Guid guid);
+		MethodBase GetMethod(MethodBase method_base);
 	}
 }

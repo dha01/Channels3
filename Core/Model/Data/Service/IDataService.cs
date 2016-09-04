@@ -43,6 +43,6 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		/// <param name="data_invoke">Исполняемые данные.</param>
 		/// <returns>Заполненные исполняемые данные.</returns>
-		DataInvokeFilled FillData(DataInvoke data_invoke);
+	/*	DataInvokeFilled FillData(DataInvoke data_invoke);*/
 	}
 }

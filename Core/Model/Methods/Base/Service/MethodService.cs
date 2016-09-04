@@ -6,31 +6,35 @@ using System.Threading.Tasks;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Invoke.Local.CSharp.Service;
 using Core.Model.Methods.Base.DomainModel;
+using Core.Model.Methods.CSharp.Service;
 
 namespace Core.Model.Methods.Base.Service
 {
 	public class MethodService : IMethodService
 	{
-		private Dictionary<Guid, MethodBase> _methodDictionary;
+		private Dictionary<string, MethodBase> _methodDictionary;
 
-		public MethodService()
+
+		private Dictionary<Guid, AssemblyFile> _assemblyDictionary;
+		private Dictionary<Guid, Dictionary<Guid, MethodBase>> _methodByAssemblyDictionary;
+
+
+		private readonly IAssemblyServiceFactory _assemblyServiceFactory;
+
+		public MethodService(IAssemblyServiceFactory assembly_service)
 		{
-			_methodDictionary = new Dictionary<Guid, MethodBase>();
-		}
-		
-		/// <summary>
-		/// Возвращает сервис для исполнения метода.
-		/// </summary>
-		/// <param name="guid">Идентификатор метода.</param>
-		/// <returns>Сервис для исполнения.</returns>
-		public IInvokeService GetInvokeService(Guid guid)
-		{
-			return new InvokeCSharpService();
+			_methodDictionary = new Dictionary<string, MethodBase>();
+			_assemblyServiceFactory = assembly_service;
 		}
 
 		public void AddMethod(MethodBase method)
 		{
-			_methodDictionary.Add(method.Id, method);
+			if (_methodDictionary.ContainsKey(method.FullPath))
+			{
+				return;
+			}
+			
+			_methodDictionary.Add(method.FullPath, method);
 		}
 
 		/// <summary>
@@ -38,13 +42,23 @@ namespace Core.Model.Methods.Base.Service
 		/// </summary>
 		/// <param name="guid">Идентификатор метода.</param>
 		/// <returns>Сервис для исполнения.</returns>
-		public MethodBase GetMethod(Guid guid)
+		public MethodBase GetMethod(MethodBase method_base)
 		{
-			if (_methodDictionary.ContainsKey(guid))
+			if (_methodDictionary.ContainsKey(method_base.FullPath))
 			{
-				return _methodDictionary[guid];
+				return _methodDictionary[method_base.FullPath];
 			}
-			return null;
+
+			var method = _assemblyServiceFactory.GetAssemblyService(method_base).GetMethod(method_base);
+
+			if (method == null)
+			{
+				return null;
+			}
+
+			AddMethod(method);
+
+			return method;
 		}
 	}
 }

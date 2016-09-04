@@ -5,24 +5,22 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Model.Methods.Base.DomainModel;
 using Core.Model.Methods.CSharp.DomainModel;
+using MethodBase = Core.Model.Methods.Base.DomainModel.MethodBase;
 
 namespace Core.Model.Methods.CSharp.Service
 {
 	public interface IAssemblyService
 	{
-		Assembly GetAssemblyForMethod(CSharpMethod csharp_method);
+		AssemblyFile GetAssemblyFile(string path);
 
-		Assembly GetAssemblyById(Guid guid);
+		Assembly GetAssembly(string path);
 
-	/*	Guid AddAssembly(byte[] assembly_bytes);
+		MethodBase GetMethod(MethodBase method_base);
 
-		void AddAssembly(Guid guid, byte[] assembly_bytes);
+		void AddAssembly(AssemblyFile assembly_file);
 
-		Guid AddAssembly(Type type);*/
-
-		List<CSharpMethod> GetMethods(Type type);
-
-		Guid AddMethod(MethodInfo method);
+		void AddAssembly(Assembly assembly);
 	}
 }

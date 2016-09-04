@@ -95,7 +95,7 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		/// <param name="data_invoke">Исполняемые данные.</param>
 		/// <returns>Заполненные исполняемые данные.</returns>
-		public DataInvokeFilled FillData(DataInvoke data_invoke)
+	/*	public DataInvokeFilled FillData(DataInvoke data_invoke)
 		{
 			var data = Get(data_invoke.InputIds).ToList();
 			if (data.Any(x => x.DataState != DataState.Complite))
@@ -103,6 +103,6 @@ namespace Core.Model.Data.Service
 				throw new Exception("Не все значения ещё были получены данных.");
 			}
 			return DataInvokeFilled.Fill(data_invoke, data.Select(x => x.Value).ToArray());
-		}
+		}*/
 	}
 }

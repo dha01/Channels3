@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Model.Methods.Base.DomainModel;
 using Core.Model.Network.DataModel;
 
 namespace Core.Model.Data.DataModel
@@ -9,7 +10,9 @@ namespace Core.Model.Data.DataModel
 	public class DataBase
 	{
 		public Guid Id { get; set; }
-		public Guid MethodId { get; set; }
+		//public Guid MethodId { get; set; }
+
+		public MethodBase Method { get; set; }
 		public Guid[] InputIds { get; set; }
 		private object _value { get; set; }
 

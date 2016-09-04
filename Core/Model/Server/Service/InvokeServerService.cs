@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
 using Core.Model.Invoke.Base.DataModel;
+using Core.Model.Methods.Base.DomainModel;
+using Core.Model.Methods.CSharp.DomainModel;
 using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
@@ -28,12 +30,12 @@ namespace Core.Model.Server.Service
 
 
 		private readonly HttpServerBase _httpServerBase;
-
+		/*
 		public InvokeServerService()
-			: this(new SendRequestService(), /*new ReceiveRequestService<Request>(),*/ new DataService<DataInvoke>(), new DataCollectorService(InvokeType.Auto), new AssemblyService(), new HttpServerBase())
+			: this(new SendRequestService(), new DataService<DataInvoke>(), new DataCollectorService(InvokeType.Auto), new AssemblyService(), new HttpServerBase())
 		{
 
-		}
+		}*/
 
 		public InvokeServerService(ISendRequestService send_request_service, /*IReceiveRequestService<Request> receive_request_service,*/ IDataService<DataInvoke> data_service, 
 			IDataCollectorService data_collector_service, IAssemblyService assembly_service, HttpServerBase http_server_base)
@@ -68,8 +70,22 @@ namespace Core.Model.Server.Service
 			methods.Add("AddData", web_action);
 
 			_httpServerBase.UrlPaths.Add("Default", methods);
-		}
+			/*
+			web_action = new WebAction()
+			{
+				InputType = typeof(Guid),
+				MethodInfo = typeof(CSharpAssemblyInfo).GetMethod("GetCSharpAssemblyInfoByMethodId"),
+				Object = this
+			};
+			methods.Add("GetAssemblyFile", web_action);
 
+			_httpServerBase.UrlPaths.Add("Default", methods);*/
+		}
+		/*
+		public AssemblyFile GetAssemblyFile(Guid assembly_file_id)
+		{
+			return _assemblyService.GetAssemblyFile(assembly_file_id);
+		}*/
 
 		public DataInvoke GetData(Guid guid)
 		{
@@ -83,15 +99,15 @@ namespace Core.Model.Server.Service
 			return true;
 		}
 
-		public byte[] GetAssembly(Guid guid)
+		public AssemblyFile GetAssembly(AssemblyInfo assembly_info)
 		{
-			var assembly = _assemblyService.GetAssemblyById(guid);
-			return File.ReadAllBytes(assembly.FullName);
+			var assembly = _assemblyService.GetAssemblyFile(assembly_info.AssemblyPath);
+			return assembly;
 		}
 
-		public bool AddAssembly(byte[] assembly)
+		public bool AddAssembly(AssemblyFile assembly_file)
 		{
-			//_assemblyService.AddAssembly(assembly);
+			_assemblyService.AddAssembly(assembly_file);
 			return true;
 		}
 		/*

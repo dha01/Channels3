@@ -33,7 +33,7 @@ namespace Core.Model.Data.DataModel
 		{
 		}
 
-		public static DataInvokeFilled Fill(DataInvoke data_invoke, object[] values)
+	/*	public static DataInvokeFilled Fill(DataInvoke data_invoke, object[] values)
 		{
 			return new DataInvokeFilled(data_invoke.Id)
 			{
@@ -42,6 +42,6 @@ namespace Core.Model.Data.DataModel
 				MethodId = data_invoke.MethodId,
 				InputIds = data_invoke.InputIds
 			};
-		}
+		}*/
 	}
 }

@@ -4,122 +4,99 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Core.Model.Invoke.Local.CSharp.Service;
+using Core.Model.Methods.Base.DomainModel;
 using Core.Model.Methods.CSharp.DomainModel;
 
 namespace Core.Model.Methods.CSharp.Service
 {
 	public class AssemblyService : IAssemblyService
 	{
-		private Dictionary<Guid, Assembly> _assemblies;
-
-		private Dictionary<Assembly, List<CSharpMethod>> _assemblieMethods;
-
-		private Dictionary<Type, List<CSharpMethod>> _typeMethods;
+		private Dictionary<string, AssemblyFile> _assemblyFiles;
+		private Dictionary<string, Assembly> _assemblies;
 
 		public AssemblyService()
 		{
-			_assemblies = new Dictionary<Guid, Assembly>();
-			_assemblieMethods = new Dictionary<Assembly, List<CSharpMethod>>();
-			_typeMethods = new Dictionary<Type, List<CSharpMethod>>();
+			_assemblies = new Dictionary<string, Assembly>();
+			_assemblyFiles = new Dictionary<string, AssemblyFile>();
 		}
 
-		public List<CSharpMethod> GetMethods(Type type)
+		public AssemblyFile GetAssemblyFile(string path)
 		{
-			return _typeMethods[type];
+			return _assemblyFiles.ContainsKey(path) ? _assemblyFiles[path] : null;
 		}
 
-		public Assembly GetAssemblyForMethod(CSharpMethod csharp_method)
+		public Assembly GetAssembly(string path)
 		{
-			throw new NotImplementedException();
-			/*	Assembly assembly = null;
-			
-			if (!AssamblyService.TryGetAssembly(string.Format("{0}", Path), out assembly))
+			return _assemblies.ContainsKey(path) ? _assemblies[path] : null;
+		}
+
+		public Base.DomainModel.MethodBase GetMethod(Base.DomainModel.MethodBase method_base)
+		{
+			var assembly = GetAssembly(method_base.AssemblyPath);
+			if (assembly == null)
 			{
-				assembly = Assembly.LoadFrom(Path);
-				AssamblyService.AddAssembly(Path, assembly);
+				throw new Exception("Не найдено библиотеки.");
 			}
-			
-			return assembly.GetType(csharp_method.TypeName);
-			var m = t.GetMethod(csharp_method.MethodName);
-			var obj = Activator.CreateInstance(t);*/
-		}
+			var types = assembly.GetTypes();
+			var type = assembly.GetType(method_base.TypeName);
+			var d = Type.GetType("System.Double");
+			var ds = Type.GetType("double");
+			var x = method_base.InputParamsTypeNames.Select(Type.GetType).ToArray();
+			var method_info = type.GetMethod(method_base.MethodName, x);
 
-		public Assembly GetAssemblyById(Guid guid)
-		{
-			throw new NotImplementedException();
-		}
-		/*
-		public Guid AddAssembly(byte[] assembly_bytes)
-		{
-			var guid = Guid.NewGuid();
-
-			AddAssembly(guid, Assembly.Load(assembly_bytes));
-
-			return guid;
-		}
-
-		public Guid AddAssembly(Type type)
-		{
-			var guid = Guid.NewGuid();
-			AddAssembly(guid, type.Assembly);
-			return guid;
-		}
-		public void AddAssembly(Guid guid, byte[] assembly_bytes)
-		{
-			AddAssembly(guid, Assembly.Load(assembly_bytes));
-		}
-
-		public void AddAssembly(Guid guid, Assembly assembly)
-		{
-			_assemblies.Add(guid, assembly);
-
-			foreach (var type in assembly.GetTypes())
+			return new CSharpMethod()
 			{
-				AddType(guid, type);
-			}
-		}*/
-
-		private void AddType(Guid assembly_guid, Type type)
-		{
-			foreach (var method in type.GetMethods())
-			{
-				AddMethod(method);
-			}
-		}
-
-		public Guid AddMethod(MethodInfo method)
-		{
-			var csharp_method = new CSharpMethod()
-			{
-				Id = Guid.Empty,//Guid.NewGuid(),
-				TypeName = method.GetType().FullName,
-				MethodName = method.Name,
-				MethodInfo = method
+				Type = type,
+				MethodInfo = method_info,
+				Version = method_base.Version,
+				InputParamsTypeNames = method_base.InputParamsTypeNames,
+				TypeName = method_base.TypeName,
+				MethodName = method_base.MethodName,
+				Namespace = method_base.Namespace
 			};
+		}
 
-			var type = method.ReflectedType;
-			var assembly = type.Assembly;
-
-			if (!_assemblies.Values.Contains(assembly))
+		public void AddAssembly(AssemblyFile assembly_file)
+		{
+			if (_assemblyFiles.ContainsKey(assembly_file.AssemblyPath))
 			{
-				_assemblies.Add(Guid.NewGuid(), assembly);
+				return;
+			}
+			
+			_assemblyFiles.Add(assembly_file.AssemblyPath, assembly_file);
+
+			if (_assemblies.ContainsKey(assembly_file.AssemblyPath))
+			{
+				return;
+			}
+			
+			var assembly = Assembly.Load(assembly_file.Data);
+
+			_assemblies.Add(assembly_file.AssemblyPath, assembly);
+		}
+
+		public void AddAssembly(Assembly assembly)
+		{
+			var assembly_file = new AssemblyFile
+			{
+				Data = File.ReadAllBytes(assembly.Location),
+				Version = assembly.GetName().Version.ToString(),
+				Namespace = assembly.GetName().Name
+			};
+			
+			if (_assemblies.ContainsKey(assembly_file.AssemblyPath))
+			{
+				return;
 			}
 
-			if (!_assemblieMethods.ContainsKey(assembly))
+			_assemblies.Add(assembly_file.AssemblyPath, assembly);
+
+			if (_assemblyFiles.ContainsKey(assembly_file.AssemblyPath))
 			{
-				_assemblieMethods.Add(assembly, new List<CSharpMethod>());
+				return;
 			}
 
-			_assemblieMethods[assembly].Add(csharp_method);
-
-			if (!_typeMethods.ContainsKey(type))
-			{
-				_typeMethods.Add(type, new List<CSharpMethod>());
-			}
-
-			_typeMethods[type].Add(csharp_method);
-
-			return csharp_method.Id;
+			AddAssembly(assembly_file);
 		}
 	}
 }

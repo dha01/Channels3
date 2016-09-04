@@ -46,10 +46,10 @@ namespace Core.Model.Data.Service
 		/// <summary>
 		/// Инициализирует сервисы по умолчанию.
 		/// </summary>
-		public DataCollectorService(InvokeType invoke_type)
+		/*public DataCollectorService(InvokeType invoke_type)
 			: this(invoke_type, new InvokeServiceFactory(), new DataService<DataInvoke>(), new SendRequestService())
 		{
-		}
+		}*/
 
 		/// <summary>
 		/// Иничиализирует с указанными сервисами.

@@ -16,8 +16,7 @@ namespace Core.Model.Methods.CSharp.DomainModel
 			get { return typeof(InvokeCSharpService); }
 		}
 
-		public string TypeName { get; set; }
-		public string MethodName { get; set; }
+		public Type Type { get; set; }
 		public MethodInfo MethodInfo { get; set; }
 	}
 }

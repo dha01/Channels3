@@ -9,7 +9,7 @@ namespace Core.Model.Network.DataModel
 	public class Request
 	{
 		public RequestType RequestType { get; set; }
-		public Node Sender { get; set; }
+		public NodeInfo Sender { get; set; }
 		public object Data { get; set; }
 	}
 }

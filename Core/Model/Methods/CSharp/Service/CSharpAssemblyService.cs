@@ -11,6 +11,7 @@ namespace Core.Model.Methods.CSharp.Service
 {
 	public class CSharpAssemblyService : ICSharpAssemblyService
 	{
+
 		private readonly Dictionary<string, AssemblyFile> _assemblyFiles;
 		private readonly Dictionary<string, Assembly> _assemblies;
 
@@ -18,6 +19,7 @@ namespace Core.Model.Methods.CSharp.Service
 		{
 			_assemblies = new Dictionary<string, Assembly>();
 			_assemblyFiles = new Dictionary<string, AssemblyFile>();
+			LoadDefaultAssemblies();
 		}
 
 		public CSharpAssemblyService(IEnumerable<string> paths) 
@@ -26,6 +28,28 @@ namespace Core.Model.Methods.CSharp.Service
 			foreach (var path in paths)
 			{
 				AddAssembly(path);
+			}
+		}
+
+		private void LoadDefaultAssemblies()
+		{
+			string path = System.Configuration.ConfigurationManager.AppSettings["DefaultAssembliesCSharpPath"];
+			LoadAllAssembliesFromPath(path);
+		}
+
+		private void LoadAllAssembliesFromPath(string path)
+		{
+			var dir = new DirectoryInfo(path);
+			var x = dir.FullName;
+			foreach (var item in dir.GetDirectories())
+			{
+				LoadAllAssembliesFromPath(item.FullName);
+			}
+
+			foreach (var item in dir.GetFiles("*.dll"))
+			{
+				var fn = item.FullName;
+				AddAssembly(item.FullName);
 			}
 		}
 

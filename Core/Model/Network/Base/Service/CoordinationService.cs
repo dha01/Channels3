@@ -9,19 +9,19 @@ namespace Core.Model.Network.Service
 {
 	public class CoordinationService : ICoordinationService
 	{
-		private List<Node> _nodeList;
+		private List<NodeInfo> _nodeList;
 
 		public CoordinationService()
 		{
-			_nodeList = new List<Node>();
+			_nodeList = new List<NodeInfo>();
 		}
-		
-		public List<Node> GetAvailableNodeList()
+
+		public List<NodeInfo> GetAvailableNodeList()
 		{
 			return _nodeList;
 		}
 
-		public Node GetSuitableNode()
+		public NodeInfo GetSuitableNode()
 		{
 			if (!_nodeList.Any())
 			{
@@ -31,9 +31,10 @@ namespace Core.Model.Network.Service
 			return _nodeList.First();
 		}
 
-		public void AddNode(Node node)
+		public void AddNode(NodeInfo node)
 		{
 			_nodeList.Add(node);
 		}
+
 	}
 }

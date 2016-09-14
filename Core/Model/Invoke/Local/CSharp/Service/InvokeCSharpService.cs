@@ -20,7 +20,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 		private IMethodService _methodService;
 		private IDataService<DataInvoke> _dataService;
 
-		private ISendRequestService _sendRequestService;
+		//private ISendRequestService _sendRequestService;
 		
 		protected override InvokeType InvokeType
 		{
@@ -43,7 +43,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			_dataService = data_service;
 		}
 
-		private CSharpMethod RequestMethod(Node sender, Guid method_id)
+		private CSharpMethod RequestMethod(NodeInfo sender, Guid method_id)
 		{
 			//_sendRequestService.
 			return null;

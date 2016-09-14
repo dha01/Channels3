@@ -9,8 +9,8 @@ namespace Core.Model.Network.Service
 {
 	public interface ICoordinationService
 	{
-		List<Node> GetAvailableNodeList();
-		Node GetSuitableNode();
-		void AddNode(Node node);
+		List<NodeInfo> GetAvailableNodeList();
+		NodeInfo GetSuitableNode();
+		void AddNode(NodeInfo node);
 	}
 }

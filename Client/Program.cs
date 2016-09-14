@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
@@ -12,6 +14,7 @@ using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.DomainModel;
 using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.DataModel;
+using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 using Core.Model.Server.Service;
 
@@ -19,8 +22,8 @@ namespace Client
 {
 	class Program
 	{
-		private static InvokeServerService _invokeServerService;
-		private static ISendRequestService _sendRequestService;
+	//	private static InvokeServerService _invokeServerService;
+	//	private static ISendRequestService _sendRequestService;
 		private static IDataService<DataInvoke> _dataService;
 		private static IDataCollectorService _dataCollectorService;
 		private static ICSharpAssemblyService _cSharpAssemblyService;
@@ -28,20 +31,25 @@ namespace Client
 		private static IMethodService _methodService;
 		private static ICoordinationService _coordinationService;
 		private static IInvokeServiceFactory _invokeServiceFactory;
+		private static IWebServerService _webServerService;
 
-		private static HttpServerBase _httpServerBase;
+		private static INodeService _clientNodeService;
+
+		private static INodeService _nodeService;
 		
 		static void Main(string[] args)
 		{
-			var remote_server_node = new Node()
+			//_clientNodeService = new ClientNodeService(1238);
+			
+			var remote_server_node = new NodeInfo()
 			{
-				URL = "127.0.0.1",
+				URL = "192.168.1.64",//"127.0.0.1",
 				Port = 12345
 			};
-
-			var local_server_node = new Node()
+			string host = Dns.GetHostName();
+			var local_server_node = new NodeInfo()
 			{
-				URL = "127.0.0.1",
+				URL = Dns.GetHostEntry(host).AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString(),
 				Port = 12354
 			};
 
@@ -49,11 +57,16 @@ namespace Client
 			_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
 			_methodService = new MethodService(_assemblyServiceFactory);
 			_coordinationService = new CoordinationService();
-			_sendRequestService = new SendRequestService();
+			//_sendRequestService = new SendRequestService();
 			_dataService = new DataService<DataInvoke>();
-			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _sendRequestService, _dataService);
-			_dataCollectorService = new DataCollectorService(InvokeType.Remote, _invokeServiceFactory, _dataService, _sendRequestService);
-			_invokeServerService = new InvokeServerService(string.Format("http://127.0.0.1:{0}/", local_server_node.Port), _dataService, _dataCollectorService, _cSharpAssemblyService);
+			_webServerService = new HttpServerService(local_server_node.Port);
+			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService);
+			_dataCollectorService = new DataCollectorService(InvokeType.Remote, _invokeServiceFactory, _dataService, _webServerService);
+			
+			//_webServerService.InitWebMethods();
+			//_invokeServerService = new InvokeServerService(_webServerService, _dataService, _dataCollectorService, _cSharpAssemblyService);
+
+			_nodeService = new NodeServiceBase(_webServerService, _dataService, _dataCollectorService, _cSharpAssemblyService);
 
 			_cSharpAssemblyService.AddAssembly(typeof(SomeClass).Assembly);
 			_coordinationService.AddNode(remote_server_node);

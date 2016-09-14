@@ -29,9 +29,11 @@ namespace Core.Model.Invoke.Base.Service
 
 		private readonly ICoordinationService _coordinationService;
 
-		private readonly ISendRequestService _sendRequestService;
+		//private readonly ISendRequestService _sendRequestService;
 
-		private readonly IDataService<DataInvoke> _dataService; 
+		private readonly IDataService<DataInvoke> _dataService;
+
+		private readonly IWebServerService _webServerService;
 
 		public void AddOnDequeueEvent(Action<DataInvoke> action)
 		{
@@ -50,14 +52,15 @@ namespace Core.Model.Invoke.Base.Service
 		/// <param name="send_request_service"></param>
 		/// <param name="data_service"></param>
 		public InvokeServiceFactory(IMethodService method_service, IAssemblyService assembly_service, ICoordinationService coordination_service,
-			ISendRequestService send_request_service, IDataService<DataInvoke> data_service)
+			IDataService<DataInvoke> data_service, IWebServerService web_server_service)
 		{
 			_methodService = method_service;
 			_assemblyService = assembly_service;
 			_coordinationService = coordination_service;
-			_sendRequestService = send_request_service;
+			//_sendRequestService = send_request_service;
+			_webServerService = web_server_service;
 
-			var remote_invoke_service = new RemoteInvokeService(_coordinationService, _sendRequestService);
+			var remote_invoke_service = new RemoteInvokeService(_coordinationService, _webServerService);
 			var invoke_c_sharp_method = new InvokeCSharpService(_assemblyService, _methodService, data_service);
 			
 			_serviceDictionary = new Dictionary<Type, IInvokeService>

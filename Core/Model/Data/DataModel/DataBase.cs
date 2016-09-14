@@ -29,7 +29,7 @@ namespace Core.Model.Data.DataModel
 		/// <summary>
 		/// Отправитель.
 		/// </summary>
-		public Node Sender { get; set; }
+		public NodeInfo Sender { get; set; }
 
 		private object _value { get; set; }
 

@@ -6,6 +6,7 @@ using System.Threading;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
+using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 
 namespace Core.Model.Data.Service
@@ -32,9 +33,11 @@ namespace Core.Model.Data.Service
 		/// </summary>
 		private readonly IDataService<DataInvoke> _dataService;
 
-		private readonly ISendRequestService _sendRequestService;
+		//private readonly ISendRequestService _sendRequestService;
 
 		private readonly ConcurrentDictionary<Guid, ManualResetEvent> _requestedResults;
+
+		private readonly IWebServerService _webServerService;
 
 		/// <summary>
 		/// Тип исполнения.
@@ -51,15 +54,17 @@ namespace Core.Model.Data.Service
 		/// <param name="invoke_type">Тип исполнения.</param>
 		/// <param name="invoke_service_factory">Фабрика сервисов исполнения.</param>
 		/// <param name="data_service">Сервис для работы с данными.</param>
-		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, ISendRequestService send_request_service)
+		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, IWebServerService web_server_service)
 		{
 			_invokeType = invoke_type;
 			_queueInvoker = new QueueInvoker<DataInvoke>(OnDequeue);
 			_invokeServiceFactory = invoke_service_factory;
 			_invokeServiceFactory.AddOnDequeueEvent(OnAfterInvoke);
 			_dataService = data_service;
-			_sendRequestService = send_request_service;
+			//_sendRequestService = send_request_service;
 			_requestedResults = new ConcurrentDictionary<Guid, ManualResetEvent>();
+
+			_webServerService = web_server_service;
 		}
 
 		#endregion
@@ -123,7 +128,7 @@ namespace Core.Model.Data.Service
 				var data = _dataService.Get(id);
 				if (data == null)
 				{
-					data = _sendRequestService.GetData(invoked_data.Sender, id);
+					data = NodeServiceBase.GetData(_webServerService, invoked_data.Sender, id);
 					if (data == null)
 					{
 						throw new Exception("DataCollectorService.GetState Ошибк апри получении данных для выполения функции.");
@@ -237,7 +242,7 @@ namespace Core.Model.Data.Service
 				{
 					if (invoked_data.Sender != null)
 					{
-						var data = _sendRequestService.GetData(invoked_data.Sender, id);
+						var data = NodeServiceBase.GetData(_webServerService, invoked_data.Sender, id);
 
 						if (data == null)
 						{

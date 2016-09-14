@@ -5,6 +5,7 @@ using System.Text;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
+using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 using Core.Model.Server.Service;
 
@@ -12,19 +13,19 @@ namespace Core.Model.Invoke.Remote.Service
 {
 	public class RemoteInvokeService : InvokeServiceBase
 	{
-		private readonly ISendRequestService _sendRequestService;
+		private readonly IWebServerService _webServerService;
 		private readonly ICoordinationService _coordinationService;
 
 		public RemoteInvokeService()
-			:this(new CoordinationService(), new SendRequestService())
+			:this(new CoordinationService(), new HttpServerService())
 		{
 			
 		}
 
-		public RemoteInvokeService(ICoordinationService coordination_service, ISendRequestService send_request_service)
+		public RemoteInvokeService(ICoordinationService coordination_service, IWebServerService web_server_service)
 		{
 			_coordinationService = coordination_service;
-			_sendRequestService = send_request_service;
+			_webServerService = web_server_service;
 		}
 		
 		protected override InvokeType InvokeType
@@ -39,9 +40,9 @@ namespace Core.Model.Invoke.Remote.Service
 		{
 			var node = _coordinationService.GetSuitableNode();
 
-			_sendRequestService.AddData(node, invoked_data);
+			NodeServiceBase.AddData(_webServerService, node, invoked_data);
 
-			var result = _sendRequestService.GetData(node, invoked_data.Id);
+			var result = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
 			invoked_data.Value = result.Value;
 
 			callback.Invoke(invoked_data);

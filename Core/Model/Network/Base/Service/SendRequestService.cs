@@ -12,15 +12,15 @@ using Newtonsoft.Json;
 
 namespace Core.Model.Network.Service
 {
-	public class SendRequestService : ISendRequestService
+	/*public class SendRequestService : ISendRequestService
 	{
 
-		public bool SendData(Node receive_node, DataInvoke data_invoke)
+		public bool SendData(NodeInfo receive_node, DataInvoke data_invoke)
 		{
 			return true;
 		}
 
-		public AssemblyFile GetAssemblyFile(Node receive_node, Guid assembly_file_id)
+		public AssemblyFile GetAssemblyFile(NodeInfo receive_node, Guid assembly_file_id)
 		{
 			using (var client = new HttpClient())
 			{
@@ -34,8 +34,9 @@ namespace Core.Model.Network.Service
 			}
 		}
 
-		public DataInvoke GetData(Node receive_node, Guid guid)
+		public DataInvoke GetData(NodeInfo receive_node, Guid guid)
 		{
+			Console.WriteLine("request GetData({0})", guid);
 			using (var client = new HttpClient())
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(guid));
@@ -48,8 +49,10 @@ namespace Core.Model.Network.Service
 			}
 		}
 
-		public bool AddData(Node receive_node, DataInvoke data_invoke)
+		public bool AddData(NodeInfo receive_node, DataInvoke data_invoke)
 		{
+
+			Console.WriteLine("request AddData({0})", data_invoke.Id);
 			using (var client = new HttpClient())
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(data_invoke));
@@ -57,9 +60,9 @@ namespace Core.Model.Network.Service
 				var response = client.PostAsync(string.Format("http://{0}:{1}/Default/AddData", receive_node.URL, receive_node.Port), content);
 
 				var responseString = response.Result.Content.ReadAsStringAsync().Result;
-			}
 
-			return true;
+				return JsonConvert.DeserializeObject<bool>(responseString);
+			}
 		}
-	}
+	}*/
 }

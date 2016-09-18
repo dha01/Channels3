@@ -9,12 +9,11 @@ namespace CoordinationServer
 {
 	class Program
 	{
-		private static INodeService _coordinationServerService;
+		private static CoordinationNodeService _coordinationNodeService;
 		
 		static void Main(string[] args)
 		{
-			_coordinationServerService = new CoordinationNodeService(12347);
-
+			_coordinationNodeService = new CoordinationNodeService(12347);
 			Console.WriteLine("Координационный сервер");
 			Console.ReadKey();
 		}

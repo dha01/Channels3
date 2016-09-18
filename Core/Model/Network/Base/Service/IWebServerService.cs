@@ -10,6 +10,8 @@ namespace Core.Model.Network.Service
 {
 	public interface IWebServerService
 	{
+		int Port { get; }
+
 		void AddWebMethod(string uri, MethodInfo method);
 
 		void InitWebMethods(object invoked_object);

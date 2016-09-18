@@ -10,6 +10,7 @@ using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.Service;
+using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
 using Newtonsoft.Json;
@@ -20,6 +21,8 @@ namespace Core.Model.Network.Node.Service
 	public class NodeServiceBase : INodeService
 	{
 		public const string NAMESPACE = "Default";
+
+		private int _port;
 
 		#region Fields
 
@@ -39,13 +42,14 @@ namespace Core.Model.Network.Node.Service
 		#region Constructor
 
 		public NodeServiceBase(int port)
-			: this(new HttpServerService(port))
+			: this(new HttpServerService(port), InvokeType.Auto)
 		{
-			
+			_port = port;
 		}
 
-		public NodeServiceBase(IWebServerService web_server_service)
+		public NodeServiceBase(IWebServerService web_server_service, InvokeType invoke_type)
 		{
+			_port = web_server_service.Port;
 			//_sendRequestService = new SendRequestService();
 			_dataService = new DataService<DataInvoke>();
 			_cSharpAssemblyService = new CSharpAssemblyService();
@@ -57,11 +61,12 @@ namespace Core.Model.Network.Node.Service
 			_webServerService = web_server_service;
 			_webServerService.InitWebMethods(this);
 			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService);
-			_dataCollectorService = new DataCollectorService(InvokeType.Local, _invokeServiceFactory, _dataService, _webServerService);
+			_dataCollectorService = new DataCollectorService(invoke_type, _invokeServiceFactory, _dataService, _webServerService);
 		}
 
 		public NodeServiceBase(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, ICSharpAssemblyService c_sharp_assembly_service)
 		{
+			_port = web_server_service.Port;
 			//_sendRequestService = new SendRequestService();
 			_dataService = data_service;
 			_cSharpAssemblyService = c_sharp_assembly_service;
@@ -78,6 +83,7 @@ namespace Core.Model.Network.Node.Service
 		public NodeServiceBase(IDataService<DataInvoke> data_service, ICSharpAssemblyService c_sharp_assembly_service, IAssemblyServiceFactory assembly_service_factory,
 			IMethodService method_service, ICoordinationService coordination_service, IInvokeServiceFactory invoke_service_factory, IDataCollectorService data_collector_service, IWebServerService web_server_service)
 		{
+			_port = web_server_service.Port;
 			//_sendRequestService = send_request_service;
 			_dataService = data_service;
 			_cSharpAssemblyService = c_sharp_assembly_service;
@@ -92,6 +98,16 @@ namespace Core.Model.Network.Node.Service
 		}
 
 		#endregion
+
+		public virtual NodeServerInfo GetServerInfo()
+		{
+			return new NodeServerInfo()
+			{
+				Port = _port,
+				URL = WebServerServiceBase.GetLocalIp(),
+				ServerType = ServerType.Undefined
+			};
+		}
 
 		#region WebMethods
 
@@ -117,6 +133,18 @@ namespace Core.Model.Network.Node.Service
 		public static bool AddData(IWebServerService web_server_service, NodeInfo node_info, DataInvoke data_invoke)
 		{
 			return web_server_service.Request<bool>(node_info, string.Format("{0}/{1}", NAMESPACE, "AddData"), data_invoke);
+		}
+
+		[WebMethod]
+		public bool AddNode(NodeServerInfo node_server_info)
+		{
+			_coordinationService.AddNode(node_server_info);
+			return true;
+		}
+
+		public static bool AddNode(IWebServerService web_server_service, NodeInfo node_info, NodeServerInfo node_server_info)
+		{
+			return web_server_service.Request<bool>(node_info, string.Format("{0}/{1}", NAMESPACE, "AddNode"), node_server_info);
 		}
 
 		#endregion

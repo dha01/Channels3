@@ -15,7 +15,7 @@ namespace Core.Model.Network.Base.Service
 		
 		private IUdpServerService _udpServerService;
 
-		private Action<object> _onReceiveNotify = (obj)=>{};
+		private Action<NodeServerInfo> _onReceiveNotify = (obj) => { };
 
 		public NotificationService()
 		{
@@ -28,19 +28,19 @@ namespace Core.Model.Network.Base.Service
 			_udpServerService.InitWebMethods(this);
 		}
 
-		public void AddAction(Action<object> action)
+		public void AddAction(Action<NodeServerInfo> action)
 		{
 			_onReceiveNotify += action;
 		}
 
 		[WebMethod]
-		public void Notify(object value)
+		public void Notify(NodeServerInfo value)
 		{
 			Console.WriteLine("Принято широковещательное уведомление: {0}", value);
 			_onReceiveNotify.Invoke(value);
 		}
 
-		public void RunRegularNotify(object value, int timeout)
+		public void RunRegularNotify(NodeServerInfo value, int timeout)
 		{
 			Task.Run(() =>
 			{
@@ -53,7 +53,7 @@ namespace Core.Model.Network.Base.Service
 			});
 		}
 
-		public static void Notify(IUdpServerService udp_server_service, object value)
+		public static void Notify(IUdpServerService udp_server_service, NodeServerInfo value)
 		{
 			if (udp_server_service == null)
 			{

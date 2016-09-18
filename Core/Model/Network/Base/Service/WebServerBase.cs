@@ -18,7 +18,14 @@ namespace Core.Model.Network.Service
 		protected Dictionary<string, MethodInfo> _routes;
 
 		protected Dictionary<MethodInfo, object> _invokedObjects;
-		
+
+		protected int _port;
+
+		public int Port
+		{
+			get { return _port; }
+		}
+
 		protected WebServerServiceBase()
 		{
 			_routes = new Dictionary<string, MethodInfo>();

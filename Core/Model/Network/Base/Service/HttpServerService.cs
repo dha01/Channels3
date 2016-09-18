@@ -37,6 +37,7 @@ namespace Core.Model.Network.Service
 		public HttpServerService(int port)
 			: base()
 		{
+			_port = port;
 			// Создаем "слушателя" для указанного порта
 			Listener = new HttpListener();
 			

@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
+using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.Service;
+using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.Base.Service;
 using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
@@ -26,7 +28,7 @@ namespace Core.Model.Network.Node.Service
 		}
 
 		public CoordinationNodeService(IWebServerService web_server_service)
-			: base(web_server_service)
+			: base(web_server_service, InvokeType.Remote)
 		{
 			_notificationService = new NotificationService(new UdpServerService(UdpServerService.BROADCAST_PORT));
 			_notificationService.AddAction(OnReceiveNotify);
@@ -48,9 +50,24 @@ namespace Core.Model.Network.Node.Service
 			_notificationService.AddAction(OnReceiveNotify);
 		}
 
-		public void OnReceiveNotify(object value)
+		public void OnReceiveNotify(NodeServerInfo value)
 		{
-			Console.WriteLine("OnReceiveNotify: {0}", value);
+			switch (value.ServerType)
+			{
+				case ServerType.Client:
+					AddNode(_webServerService, value, GetServerInfo());
+					break;
+				case ServerType.Invoke:
+					_coordinationService.AddNode(value);
+					break;
+			}
+		}
+
+		public override NodeServerInfo GetServerInfo()
+		{
+			var node_server_info = base.GetServerInfo();
+			node_server_info.ServerType = ServerType.Coordination;
+			return node_server_info;
 		}
 	}
 }

@@ -77,9 +77,11 @@
     <Compile Include="Model\Methods\CSharp\Service\CSharpAssemblyService.cs" />
     <Compile Include="Model\Methods\Base\Service\IAssemblyService.cs" />
     <Compile Include="Model\Methods\CSharp\Service\ICSharpAssemblyService.cs" />
+    <Compile Include="Model\Network\Base\DataModel\NodeServerInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\NodeInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\Request.cs" />
     <Compile Include="Model\Network\Base\DataModel\RequestType.cs" />
+    <Compile Include="Model\Network\Base\DataModel\ServerType.cs" />
     <Compile Include="Model\Network\Base\DataModel\WebClass.cs" />
     <Compile Include="Model\Network\Base\DataModel\WebMethodAttribute.cs" />
     <Compile Include="Model\Network\Base\Service\CoordinationService.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Model\Network\Base\Service\NotificationService.cs" />
     <Compile Include="Model\Network\Base\Service\UdpServerService.cs" />
     <Compile Include="Model\Network\Node\Service\ClientNodeService.cs" />
+    <Compile Include="Model\Network\Node\Service\IClientNodeService.cs" />
     <Compile Include="Model\Network\Node\Service\INodeService.cs" />
     <Compile Include="Model\Network\Base\Service\ISendRequestService.cs" />
     <Compile Include="Model\Network\Base\Service\IWebServerService.cs" />

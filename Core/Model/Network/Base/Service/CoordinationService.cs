@@ -9,19 +9,19 @@ namespace Core.Model.Network.Service
 {
 	public class CoordinationService : ICoordinationService
 	{
-		private List<NodeInfo> _nodeList;
+		private List<NodeServerInfo> _nodeList;
 
 		public CoordinationService()
 		{
-			_nodeList = new List<NodeInfo>();
+			_nodeList = new List<NodeServerInfo>();
 		}
 
-		public List<NodeInfo> GetAvailableNodeList()
+		public List<NodeServerInfo> GetAvailableNodeList()
 		{
 			return _nodeList;
 		}
 
-		public NodeInfo GetSuitableNode()
+		public NodeServerInfo GetSuitableNode()
 		{
 			if (!_nodeList.Any())
 			{
@@ -31,10 +31,14 @@ namespace Core.Model.Network.Service
 			return _nodeList.First();
 		}
 
-		public void AddNode(NodeInfo node)
+		public void AddNode(NodeServerInfo node)
 		{
-			_nodeList.Add(node);
-		}
+			if (!_nodeList.Exists(x => x.Equals(node)))
+			{
+				_nodeList.Add(node);
 
+				Console.WriteLine("Добавлен новый сервер: {0}:{1} {2}", node.URL, node.Port, node.ServerType);
+			}
+		}
 	}
 }

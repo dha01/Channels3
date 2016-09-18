@@ -8,18 +8,11 @@ namespace InvokeServer
 {
 	class Program
 	{
-		private static InvokeServerService _invokeServerService;
+		private static InvokeNodeService _invokeNodeService;
 		
 		static void Main(string[] args)
 		{
-			InvokeNodeService invoke_node_service = new InvokeNodeService(12345);
-			
-			//_invokeServerService = new InvokeServerService(12345);
-
-			// TODO: Нужно добавить поиск по UDP серверов в текущей сети.
-			// TODO: Нужно добавить config со списком доступных серверов.
-			//_invokeServerService._coordinationService.AddNode(remote_server_node);
-
+			_invokeNodeService = new InvokeNodeService(12345);
 			Console.WriteLine("Вычислительный сервер");
 			Console.ReadKey();
 		}

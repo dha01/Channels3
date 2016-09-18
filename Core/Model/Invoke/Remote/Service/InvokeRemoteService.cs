@@ -45,6 +45,7 @@ namespace Core.Model.Invoke.Remote.Service
 			var result = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
 			invoked_data.Value = result.Value;
 
+			Console.WriteLine("Получен результат исполнения удаленного метода: {0}", invoked_data.Method.MethodName);
 			callback.Invoke(invoked_data);
 		}
 	}

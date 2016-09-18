@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Model.Network.DataModel;
 
 namespace Core.Model.Network.Base.Service
 {
 	public interface INotificationService
 	{
-		void AddAction(Action<object> action);
+		void AddAction(Action<NodeServerInfo> action);
 
-		void RunRegularNotify(object value, int timeout);
+		void RunRegularNotify(NodeServerInfo value, int timeout);
 	}
 }

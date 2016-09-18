@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
+using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.Service;
+using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.Base.Service;
 using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
@@ -24,17 +26,18 @@ namespace Core.Model.Network.Node.Service
 		{
 			_notificationService = new NotificationService(new UdpServerService());
 
-			var node = new NodeInfo
+			var node = new NodeServerInfo
 			{
 				URL = WebServerServiceBase.GetLocalIp(),
-				Port = port
+				Port = port,
+				ServerType = ServerType.Invoke
 			};
 			_notificationService.RunRegularNotify(node, 5000);
 
 		}
 
 		public InvokeNodeService(IWebServerService web_server_service)
-			: base(web_server_service)
+			: base(web_server_service, InvokeType.Local)
 		{
 
 		}
@@ -50,6 +53,13 @@ namespace Core.Model.Network.Node.Service
 			: base(data_service, c_sharp_assembly_service, assembly_service_factory, method_service, coordination_service, invoke_service_factory, data_collector_service, web_server_service)
 		{
 
+		}
+
+		public override NodeServerInfo GetServerInfo()
+		{
+			var node_server_info = base.GetServerInfo();
+			node_server_info.ServerType = ServerType.Invoke;
+			return node_server_info;
 		}
 	}
 }

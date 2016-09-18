@@ -84,6 +84,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 				var inputs = invoked_data.InputIds.Select(x => _dataService.Get(x).Value).ToArray();
 				var obj = Activator.CreateInstance(method.Type);
 				invoked_data.Value = method.MethodInfo.Invoke(obj, inputs);
+				Console.WriteLine("Исполнен метод {0}", invoked_data.Method.MethodName);
 			}
 			catch (Exception e)
 			{

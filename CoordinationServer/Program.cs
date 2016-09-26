@@ -13,7 +13,7 @@ namespace CoordinationServer
 		
 		static void Main(string[] args)
 		{
-			_coordinationNodeService = new CoordinationNodeService(12347);
+			_coordinationNodeService = new CoordinationNodeService();
 			Console.WriteLine("Координационный сервер");
 			Console.ReadKey();
 		}

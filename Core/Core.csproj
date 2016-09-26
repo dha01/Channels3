@@ -49,7 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Model\BasicMethods\Math\Service\ISimple.cs" />
+    <Compile Include="Model\BasicMethods\Math\Service\Simple.cs" />
     <Compile Include="Model\Data\DataModel\DataBase.cs" />
     <Compile Include="Model\Data\DataModel\DataState.cs" />
     <Compile Include="Model\Data\Service\DataService.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Model\Network\Node\Service\InvokeNodeService.cs" />
     <Compile Include="Model\Network\Node\Service\NodeServiceBase.cs" />
     <Compile Include="Model\Network\Base\Service\SendRequestService.cs" />
-    <Compile Include="Model\Network\Base\Service\WebServerBase.cs" />
+    <Compile Include="Model\Network\Base\Service\WebServerServiceBase.cs" />
     <Compile Include="Model\QueueInvoker.cs" />
     <Compile Include="Model\Server\Service\CoordinationServerService.cs" />
     <Compile Include="Model\Server\Service\ICoordinationServerService.cs" />

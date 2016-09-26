@@ -21,6 +21,12 @@ namespace Core.Model.Network.Node.Service
 	{
 		private readonly INotificationService _notificationService;
 
+		public CoordinationNodeService()
+			: this(WebServerServiceBase.GetRandomPort())
+		{
+			
+		}
+
 		public CoordinationNodeService(int port)
 			: this(new HttpServerService(port))
 		{

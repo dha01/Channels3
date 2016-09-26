@@ -12,7 +12,7 @@ namespace InvokeServer
 		
 		static void Main(string[] args)
 		{
-			_invokeNodeService = new InvokeNodeService(12345);
+			_invokeNodeService = new InvokeNodeService();
 			Console.WriteLine("Вычислительный сервер");
 			Console.ReadKey();
 		}

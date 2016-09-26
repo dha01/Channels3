@@ -16,26 +16,11 @@ namespace Core.Model.Network.Base.Service
 	public class UdpServerService : WebServerServiceBase, IUdpServerService
 	{
 		/// <summary>
-		/// Минимальное значение порта.
-		/// </summary>
-		protected const int PORT_MIN = 30000;
-
-		/// <summary>
-		/// Максимальное значение порта.
-		/// </summary>
-		protected const int PORT_MAX = 40000;
-
-		/// <summary>
-		/// Случайное значения порта.
-		/// </summary>
-		protected static Random Random = new Random(DateTime.Now.Millisecond);
-		
-		/// <summary>
 		/// Порт для отправки сообщений по протоколу UDP.
 		/// </summary>
 		public static int UdpPingPort = GetRandomPort();
-		
-		
+
+
 		public const string BROADCAST_ADDRESS = "224.0.0.0";
 		public const int BROADCAST_PORT = 6666;
 
@@ -176,68 +161,6 @@ namespace Core.Model.Network.Base.Service
 			var json_input = message[1];
 
 			InvokeWebMethod(name, json_input);
-		}
-
-
-		public static int GetRandomPort()
-		{
-			// Получаем произвольный порт из диапазона.
-			for (var i = 0; i < (PORT_MAX - PORT_MIN) * 0.1; i++)
-			{
-				var port = Random.Next(PORT_MIN, PORT_MAX);
-
-				try
-				{
-					Socket Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-					Socket.Bind(new IPEndPoint(IPAddress.Any, port));
-					Socket.Close();
-					return port;
-				}
-				catch (SocketException e)
-				{
-					if (e.ErrorCode == 10048)
-					{
-						Console.WriteLine("Порт {0} занят.", port);
-					}
-					else
-					{
-						Console.WriteLine("На порту {0} возникло исключение: {1}", port, e.Message);
-					}
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine("На порту {0} возникло исключение: {1}", port, e.Message);
-				}
-			}
-
-			for (var i = PORT_MIN; i < PORT_MAX; i++)
-			{
-				var port = i;
-
-				try
-				{
-					Socket Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-					Socket.Bind(new IPEndPoint(IPAddress.Any, port));
-					Socket.Close();
-					return port;
-				}
-				catch (SocketException e)
-				{
-					if (e.ErrorCode == 10048)
-					{
-						Console.WriteLine("Порт {0} занят.", port);
-					}
-					else
-					{
-						Console.WriteLine("На порту {0} возникло исключение: {1}", port, e.Message);
-					}
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine("На порту {0} возникло исключение: {1}", port, e.Message);
-				}
-			}
-			throw new Exception(string.Format("Все порты в диапазоне от {0} до {1} заняты.", PORT_MIN, PORT_MAX));
 		}
 
 	}

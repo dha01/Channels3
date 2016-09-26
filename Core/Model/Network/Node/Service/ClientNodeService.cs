@@ -7,6 +7,7 @@ using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
+using Core.Model.Methods.Base.DomainModel;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.Base.DataModel;
@@ -17,15 +18,83 @@ using Core.Model.Server.Service;
 
 namespace Core.Model.Network.Node.Service
 {
+	public static class ClientNodeExtension
+	{
+		public static void Init()
+		{
+			_service = new ClientNodeService();	
+		}
+		
+		private static IClientNodeService _service;
+
+		private static IClientNodeService _clientNodeService
+		{
+			get
+			{
+				if (_service == null)
+				{
+					_service = new ClientNodeService();
+				}
+
+				return _service;
+			}
+		}
+
+		public static DataInvoke Invoke(this MethodBase method, params DataInvoke[] input_params)
+		{
+			var data_invoke_result = new DataInvoke()
+			{
+				Method = method,
+				InputIds = input_params.Select(x =>
+				{
+					_clientNodeService.Invoke(x);
+					return x.Id;
+				}).ToArray(),
+				InvokeType = InvokeType.Remote
+			};
+
+			_clientNodeService.Invoke(data_invoke_result);
+			return data_invoke_result;
+		}
+
+		public static DataInvoke<T> Invoke<T>(this MethodBase method, params DataInvoke[] input_params)
+		{
+			return method.Invoke(input_params).SetType<T>();
+		}
+
+		public static object Result(this DataInvoke data)
+		{
+			return _clientNodeService.Get(data.Id);
+		}
+
+		public static T Result<T>(this DataInvoke<T> data)
+		{
+			return (T)Convert.ChangeType(_clientNodeService.Get(data.Id), typeof(T));
+		}
+
+		public static T Result<T>(this DataInvoke data)
+		{
+			return (T)Convert.ChangeType(_clientNodeService.Get(data.Id), typeof(T));
+		}
+
+		public static string ToString(this DataInvoke data)
+		{
+			return data.Result().ToString();
+		}
+	}
+	
 	public class ClientNodeService : NodeServiceBase, IClientNodeService
 	{
 		private readonly INotificationService _notificationService;
-		
+
+		public ClientNodeService()
+			: this(WebServerServiceBase.GetRandomPort())
+		{
+		}
+
 		public ClientNodeService(int port)
 			: this(new HttpServerService(port))
 		{
-
-			
 		}
 
 		public ClientNodeService(IWebServerService web_server_service)

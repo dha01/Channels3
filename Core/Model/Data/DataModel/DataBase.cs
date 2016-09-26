@@ -31,15 +31,21 @@ namespace Core.Model.Data.DataModel
 		/// </summary>
 		public NodeInfo Sender { get; set; }
 
-		private object _value { get; set; }
+		public Type ValueType { get; set; }
+
+		protected object _value { get; set; }
 
 		/// <summary>
 		/// Значение.
 		/// </summary>
-		public object Value
+		public virtual object Value
 		{
 			get
 			{
+				if (ValueType != null && _value != null && _value.GetType() != ValueType)
+				{
+					_value = Convert.ChangeType(_value, ValueType);
+				}
 				return _value;
 			}
 			set
@@ -72,6 +78,7 @@ namespace Core.Model.Data.DataModel
 		{
 			Id = id;
 			Value = value;
+			ValueType = value.GetType();
 			DataState = DataState.Complite;
 		}
 

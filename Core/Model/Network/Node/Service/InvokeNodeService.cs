@@ -20,7 +20,13 @@ namespace Core.Model.Network.Node.Service
 	public class InvokeNodeService : NodeServiceBase
 	{
 		private readonly INotificationService _notificationService;
-		
+
+		public InvokeNodeService()
+			: this(WebServerServiceBase.GetRandomPort())
+		{
+			
+		}
+
 		public InvokeNodeService(int port)
 			: this(new HttpServerService(port))
 		{

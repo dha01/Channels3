@@ -1,6 +1,4 @@
 ﻿using System;
-using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Methods.CSharp.DomainModel;
 using Core.Model.Network.Node.Service;
 
@@ -10,15 +8,15 @@ namespace Client
 	{
 		static void Main(string[] args)
 		{
-			var node_client = new ClientNodeService(12354);
+			ClientNodeExtension.Init();
 
 			var method = new CSharpMethod()
 			{
-				Version = "1.0.0.0",
 				Namespace = "Core",
-				TypeName = "Client.SomeClass",
+				Version = "1.0.0.0",
+				TypeName = "Core.Model.BasicMethods.Math.Service.Simple",
 				MethodName = "Sum",
-				InputParamsTypeNames = new[] { "System.Double", "System.Double" }
+				InputParamsTypeNames = new[] { "System.Int32", "System.Int32" }
 			};
 
 			Console.WriteLine("Клиент");
@@ -27,23 +25,17 @@ namespace Client
 			while (true)
 			{
 				i++;
-				var data_invoke_a = new DataInvoke(i);
-				node_client.Invoke(data_invoke_a);
-				var data_invoke_b = new DataInvoke(2);
-				node_client.Invoke(data_invoke_b);
+				var a = method.Invoke<int>(1, 2);
+				var b = method.Invoke<int>(3, 4);
+				var c = method.Invoke<int>(5, 6);
+				var d = method.Invoke<int>(7, 8);
 
-				var data_invoke_result = new DataInvoke()
-				{
-					Method = method,
-					InputIds = new[] { data_invoke_a.Id, data_invoke_b.Id },
-					InvokeType = InvokeType.Local
-				};
+				var e = method.Invoke<int>(a, b);
+				var f = method.Invoke<int>(c, d);
 
-				node_client.Invoke(data_invoke_result);
-
-				var result = node_client.Get(data_invoke_result.Id);
-
-				Console.WriteLine(result);
+				var result = method.Invoke<int>(e, f);
+				var r = result.Result();
+				Console.WriteLine(r);
 
 				Console.WriteLine("End");
 				Console.ReadKey();

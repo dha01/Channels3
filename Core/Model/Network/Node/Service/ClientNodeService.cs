@@ -22,7 +22,16 @@ namespace Core.Model.Network.Node.Service
 	{
 		public static void Init()
 		{
-			_service = new ClientNodeService();	
+			try
+			{
+				_service = new ClientNodeService();	
+			}
+			catch (Exception e)
+			{
+				throw new Exception(string.Format("Ошибка при инициализации: {0}", e.Message));
+			}
+			
+			
 		}
 		
 		private static IClientNodeService _service;

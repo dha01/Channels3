@@ -36,7 +36,7 @@ namespace Core.Model.Network.Base.Service
 		[WebMethod]
 		public void Notify(NodeServerInfo value)
 		{
-			Console.WriteLine("Принято широковещательное уведомление: {0}", value);
+			//Console.WriteLine("Принято широковещательное уведомление: {0}", value);
 			_onReceiveNotify.Invoke(value);
 		}
 
@@ -46,7 +46,7 @@ namespace Core.Model.Network.Base.Service
 			{
 				while (true)
 				{
-					Console.WriteLine("Отправлено широковещательное уведомление: {0}", value);
+					//Console.WriteLine("Отправлено широковещательное уведомление: {0}", value);
 					Notify(_udpServerService, value);
 					Thread.Sleep(timeout);
 				}

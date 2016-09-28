@@ -45,7 +45,8 @@ namespace Core.Model.Invoke.Remote.Service
 			var result = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
 			invoked_data.Value = result.Value;
 
-			Console.WriteLine("Получен результат исполнения удаленного метода: {0}", invoked_data.Method.MethodName);
+			Console.WriteLine("{0} {1} Получен результат исполнения удаленного метода {2}: результат {3}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), invoked_data.Method.MethodName, invoked_data.Value);
+			
 			callback.Invoke(invoked_data);
 		}
 	}

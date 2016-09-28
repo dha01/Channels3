@@ -29,24 +29,12 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 				return InvokeType.Local;
 			}
 		}
-		/*
-		public InvokeCSharpService()
-			:this(new AssemblyService(), new MethodService(), new DataService<DataInvoke>())
-		{
-			
-		}*/
 
 		public InvokeCSharpService(IAssemblyService assembly_service, IMethodService method_service, IDataService<DataInvoke> data_service)
 		{
 			_assemblyService = assembly_service;
 			_methodService = method_service;
 			_dataService = data_service;
-		}
-
-		private CSharpMethod RequestMethod(NodeInfo sender, Guid method_id)
-		{
-			//_sendRequestService.
-			return null;
 		}
 
 		private CSharpMethod GetMethod(Methods.Base.DomainModel.MethodBase method)
@@ -84,7 +72,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 				var inputs = invoked_data.InputIds.Select(x => _dataService.Get(x).Value).ToArray();
 				var obj = Activator.CreateInstance(method.Type);
 				invoked_data.Value = method.MethodInfo.Invoke(obj, inputs);
-				Console.WriteLine("Исполнен метод {0}", invoked_data.Method.MethodName);
+				Console.WriteLine("{0} {1} Исполнен метод {2}: результат {3}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), invoked_data.Method.MethodName, invoked_data.Value);
 			}
 			catch (Exception e)
 			{

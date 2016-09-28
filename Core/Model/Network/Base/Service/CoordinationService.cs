@@ -36,8 +36,7 @@ namespace Core.Model.Network.Service
 			if (!_nodeList.Exists(x => x.Equals(node)))
 			{
 				_nodeList.Add(node);
-
-				Console.WriteLine("Добавлен новый сервер: {0}:{1} {2}", node.URL, node.Port, node.ServerType);
+				Console.WriteLine("{0} {1} Добавлен новый сервер: {2}:{3} {4}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), node.URL, node.Port, node.ServerType);
 			}
 		}
 	}

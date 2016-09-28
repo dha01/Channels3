@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Model.Methods.CSharp.DomainModel;
 using Core.Model.Network.Node.Service;
+using Core.Model.Network.Service;
 
 namespace ClientServer
 {
@@ -16,6 +17,8 @@ namespace ClientServer
 			ClientNodeExtension.Init();
 			
 			Console.WriteLine("OS : {0}", Environment.OSVersion);
+			Console.WriteLine("pid {0}  ip {1}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
+			
 			try
 			{
 				Console.Write("Input command: ");

@@ -17,7 +17,7 @@ namespace ClientServer
 			ClientNodeExtension.Init();
 			
 			Console.WriteLine("OS : {0}", Environment.OSVersion);
-			Console.WriteLine("pid {0}  ip {1}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
+			Console.WriteLine("pid {0} ip {1}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
 			
 			try
 			{
@@ -50,11 +50,11 @@ namespace ClientServer
 						break;
 					case "RunCoordination":
 						RunCoordinationServer();
-						Console.WriteLine("Запущен координационный сервер.");
+						Console.WriteLine("pid {0} ip {1} Запущен координационный сервер.", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
 						break;
 					case "RunInvoke":
 						RunInvokeServer();
-						Console.WriteLine("Запущен вычислительный сервер.");
+						Console.WriteLine("pid {0} ip {1} Запущен вычислительный сервер.", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
 						break;
 					case "Sum":
 						Console.WriteLine(Sum(int.Parse(command[1]), int.Parse(command[2])));

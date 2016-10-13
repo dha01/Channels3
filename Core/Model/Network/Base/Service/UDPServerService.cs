@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Model.Network.DataModel;
+using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.Service;
 using Newtonsoft.Json;
 

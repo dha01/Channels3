@@ -16,7 +16,7 @@ using Core.Model.Network.Service;
 namespace Core.Model.Invoke.Base.Service
 {
 	/// <summary>
-	/// Фабрика сервиса исполнения.
+	/// Фабрика сервисов исполнения.
 	/// </summary>
 	public class InvokeServiceFactory : IInvokeServiceFactory
 	{

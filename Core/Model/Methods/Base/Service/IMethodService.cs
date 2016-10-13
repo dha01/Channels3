@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Model.Invoke.Base.Service;
-using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Network.DataModel;
+﻿using Core.Model.Methods.Base.DomainModel;
 
 namespace Core.Model.Methods.Base.Service
 {
+	/// <summary>
+	/// Интерфейс сервиса для работы и хранения методов.
+	/// </summary>
 	public interface IMethodService
 	{
 		void AddMethod(MethodBase method);
 
 		/// <summary>
-		/// Возвращает метод по идентификатору.
+		/// Возвращает метод по базовому описанию.
 		/// </summary>
-		/// <param name="guid">Идентификатор метода.</param>
+		/// <param name="method_base">Базовое описание метода.</param>
 		/// <returns>Сервис для исполнения.</returns>
 		MethodBase GetMethod(MethodBase method_base);
 	}

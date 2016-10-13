@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
 
 namespace Core.Model.Network.Base.Service

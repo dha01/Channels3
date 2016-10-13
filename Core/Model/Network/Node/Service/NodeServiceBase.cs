@@ -11,7 +11,6 @@ using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.Base.DataModel;
-using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
 using Newtonsoft.Json;
 
@@ -26,15 +25,44 @@ namespace Core.Model.Network.Node.Service
 
 		#region Fields
 
-		//protected ISendRequestService _sendRequestService;
+		/// <summary>
+		/// Сервис для работы с данными.
+		/// </summary>
 		protected IDataService<DataInvoke> _dataService;
+
+		/// <summary>
+		/// Сервис обработки входных данных.
+		/// </summary>
 		protected IDataCollectorService _dataCollectorService;
+
+		/// <summary>
+		/// Сервис для работы с библиотеками C#.
+		/// </summary>
 		protected ICSharpAssemblyService _cSharpAssemblyService;
+
+		/// <summary>
+		/// Фабрика сервисов библиотек.
+		/// </summary>
 		protected IAssemblyServiceFactory _assemblyServiceFactory;
+
+		/// <summary>
+		/// Сервис для работы и хранения методов.
+		/// </summary>
 		protected IMethodService _methodService;
+
+		/// <summary>
+		/// Сервис координации.
+		/// </summary>
 		protected ICoordinationService _coordinationService;
+
+		/// <summary>
+		/// Фабрика сервисов исполнения.
+		/// </summary>
 		protected IInvokeServiceFactory _invokeServiceFactory;
 
+		/// <summary>
+		/// Сервис приема и передачи данных по сети.
+		/// </summary>
 		protected IWebServerService _webServerService;
 
 		#endregion
@@ -99,6 +127,10 @@ namespace Core.Model.Network.Node.Service
 
 		#endregion
 
+		/// <summary>
+		/// Возвращает информацию по узлу срвера.
+		/// </summary>
+		/// <returns></returns>
 		public virtual NodeServerInfo GetServerInfo()
 		{
 			return new NodeServerInfo()

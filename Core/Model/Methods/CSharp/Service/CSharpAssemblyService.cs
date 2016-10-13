@@ -9,6 +9,9 @@ using Core.Model.Methods.CSharp.DomainModel;
 
 namespace Core.Model.Methods.CSharp.Service
 {
+	/// <summary>
+	/// Сервис для работы с библиотеками C#.
+	/// </summary>
 	public class CSharpAssemblyService : ICSharpAssemblyService
 	{
 

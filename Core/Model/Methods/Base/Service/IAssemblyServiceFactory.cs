@@ -3,7 +3,7 @@
 namespace Core.Model.Methods.Base.Service
 {
 	/// <summary>
-	/// Интерфейс фабрики сервиса пространства имен.
+	/// Интерфейс фабрики сервисов библиотек.
 	/// </summary>
 	public interface IAssemblyServiceFactory
 	{

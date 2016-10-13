@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Model.Network.DataModel;
+using Core.Model.Network.Base.DataModel;
 
 namespace Core.Model.Network.Service
 {

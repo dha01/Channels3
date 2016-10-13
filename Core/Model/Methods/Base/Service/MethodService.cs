@@ -11,7 +11,7 @@ using Core.Model.Methods.CSharp.Service;
 namespace Core.Model.Methods.Base.Service
 {
 	/// <summary>
-	/// Сервис хранения методов.
+	/// Сервис для работы и хранения методов.
 	/// </summary>
 	public class MethodService : IMethodService
 	{

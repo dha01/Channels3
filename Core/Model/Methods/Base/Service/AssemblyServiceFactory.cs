@@ -9,6 +9,9 @@ using Core.Model.Methods.CSharp.Service;
 
 namespace Core.Model.Methods.Base.Service
 {
+	/// <summary>
+	/// Фабрика сервисов библиотек.
+	/// </summary>
 	public class AssemblyServiceFactory : IAssemblyServiceFactory
 	{
 		private Dictionary<Type, IAssemblyService> _assemblyServices;

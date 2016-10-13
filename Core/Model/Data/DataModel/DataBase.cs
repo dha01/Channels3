@@ -1,6 +1,6 @@
 ﻿using System;
 using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Network.DataModel;
+using Core.Model.Network.Base.DataModel;
 
 namespace Core.Model.Data.DataModel
 {

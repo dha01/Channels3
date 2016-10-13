@@ -4,14 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Model.Network.DataModel;
+using Core.Model.Network.Base.DataModel;
 
 namespace Core.Model.Network.Service
 {
-	
+	/// <summary>
+	/// Базовый класс сервиса приема и передачи данных по сети.
+	/// </summary>
 	[WebClass(Namespace = "Base")]
 	public abstract class WebServerServiceBase : IWebServerService
 	{

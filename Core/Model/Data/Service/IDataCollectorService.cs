@@ -3,6 +3,9 @@ using Core.Model.Data.DataModel;
 
 namespace Core.Model.Data.Service
 {
+	/// <summary>
+	/// Интерфейс сервиса обработки входных данных.
+	/// </summary>
 	public interface IDataCollectorService
 	{
 		/// <summary>

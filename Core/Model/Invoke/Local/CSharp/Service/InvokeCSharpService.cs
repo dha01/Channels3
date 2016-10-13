@@ -7,21 +7,35 @@ using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.DomainModel;
-using Core.Model.Methods.CSharp.Service;
-using Core.Model.Network.DataModel;
 using Core.Model.Network.Service;
 
 namespace Core.Model.Invoke.Local.CSharp.Service
 {
+	/// <summary>
+	/// Сервис исполнения методов C#.
+	/// </summary>
 	public class InvokeCSharpService : InvokeServiceBase
 	{
-		private IAssemblyService _assemblyService;
+		#region Fields
 
-		private IMethodService _methodService;
-		private IDataService<DataInvoke> _dataService;
+		/// <summary>
+		/// Сервис для работы с библиотеками.
+		/// </summary>
+		private readonly IAssemblyService _assemblyService;
 
-		//private ISendRequestService _sendRequestService;
+		/// <summary>
+		/// Сервис для работы с методами.
+		/// </summary>
+		private readonly IMethodService _methodService;
+
+		/// <summary>
+		/// Сервис для работы с данными.
+		/// </summary>
+		private readonly IDataService<DataInvoke> _dataService;
 		
+		/// <summary>
+		/// Тип исполнения.
+		/// </summary>
 		protected override InvokeType InvokeType
 		{
 			get
@@ -30,6 +44,16 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			}
 		}
 
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Инициализирует сервисы.
+		/// </summary>
+		/// <param name="assembly_service">Сервис для работы с библиотеками.</param>
+		/// <param name="method_service">Сервис для работы с методами.</param>
+		/// <param name="data_service">Сервис для работы с данными.</param>
 		public InvokeCSharpService(IAssemblyService assembly_service, IMethodService method_service, IDataService<DataInvoke> data_service)
 		{
 			_assemblyService = assembly_service;
@@ -37,6 +61,15 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			_dataService = data_service;
 		}
 
+		#endregion
+
+		#region Methods / Private
+
+		/// <summary>
+		/// Возвращает исполняемый метод C# исходя из базовой информации о методе.
+		/// </summary>
+		/// <param name="method">Базовое описание исполняемого метода.</param>
+		/// <returns>Исполняемый метод C#.</returns>
 		private CSharpMethod GetMethod(Methods.Base.DomainModel.MethodBase method)
 		{
 			var result = (CSharpMethod)_methodService.GetMethod(method);
@@ -63,6 +96,11 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			return result;
 		}
 
+		/// <summary>
+		/// Исполняет метод и сохраняет полученный результат.
+		/// </summary>
+		/// <param name="invoked_data">Исполняемые данные.</param>
+		/// <param name="callback">Событие при завершении исполнения.</param>
 		protected override void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback)
 		{
 			var method = GetMethod(invoked_data.Method);
@@ -80,5 +118,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			}
 			callback.Invoke(invoked_data);
 		}
+
+		#endregion
 	}
 }

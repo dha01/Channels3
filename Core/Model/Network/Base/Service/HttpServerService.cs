@@ -8,23 +8,36 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
-using Core.Model.Network.DataModel;
+using Core.Model.Network.Base.DataModel;
 using Newtonsoft.Json;
 
 namespace Core.Model.Network.Service
 {
+	/// <summary>
+	/// Сервис приема и передачи данных по протоколу http.
+	/// </summary>
 	[WebClass(Namespace = "Default")]
 	public class HttpServerService : WebServerServiceBase
 	{
+		#region Constants
+
 		private const string DEFAULT_URL = "http://127.0.0.1:1234/";
 
+		/// <summary>
+		/// Порт по умолчанию.
+		/// </summary>
 		private const int DEFAULT_PORT = 1234;
 
-		//public string Url;
+		#endregion
 
-		private HttpListener Listener; // Объект, принимающий TCP-клиентов
+		#region Fields
+
+		/// <summary>
+		/// Объект, принимающий клиентов.
+		/// </summary>
+		private HttpListener Listener;
+
+		#endregion
 
 		#region Constructor
 		
@@ -79,13 +92,60 @@ namespace Core.Model.Network.Service
 
 		#endregion
 
+		#region Methods / Public
+
+		/// <summary>
+		/// Добавляет сетевой методод.
+		/// </summary>
+		/// <param name="root">Корень.</param>
+		/// <param name="method">Метод.</param>
 		public override void AddWebMethod(string root, MethodInfo method)
 		{
 			_routes.Add(string.Format(@"/{0}/{1}", root, method.Name), method);
 		}
 
+		/// <summary>
+		/// Запрашивает исполнение сетевого метода на удаленном узле и ожидает результата.
+		/// </summary>
+		/// <typeparam name="T">Тип результата.</typeparam>
+		/// <param name="node_info">Информация об удаленном сетевом узле.</param>
+		/// <param name="name">Название метода.</param>
+		/// <param name="input_param">Входной параметр.</param>
+		/// <returns>Результат исполнения.</returns>
+		public override T Request<T>(NodeInfo node_info, string name, object input_param)
+		{
+			using (var client = new HttpClient())
+			{
+				var content = new StringContent(JsonConvert.SerializeObject(input_param));
+				var response = client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
+				var responseString = response.Result.Content.ReadAsStringAsync().Result;
+				return JsonConvert.DeserializeObject<T>(responseString);
+			}
+		}
+
+		/// <summary>
+		/// Запрашивает исполнение сетевого метода на удаленном узле без ожидания результата.
+		/// </summary>
+		/// <param name="node_info">Информация об удаленном сетевом узле.</param>
+		/// <param name="name">Название метода.</param>
+		/// <param name="input_param">Входной параметр.</param>
+		public override void Request(NodeInfo node_info, string name, object input_param)
+		{
+			using (var client = new HttpClient())
+			{
+				var content = new StringContent(JsonConvert.SerializeObject(input_param));
+				client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
+			}
+		}
+
+		#endregion
+
 		#region Methods/Private
 
+		/// <summary>
+		/// Добавляет прослушиваемый url адрес для сервера.
+		/// </summary>
+		/// <param name="url"></param>
 		private void AddAddress(string url)
 		{
 			Listener.Prefixes.Add(url);
@@ -140,25 +200,5 @@ namespace Core.Model.Network.Service
 		}
 
 		#endregion
-
-		public override T Request<T>(NodeInfo node_info, string name, object input_param)
-		{
-			using (var client = new HttpClient())
-			{
-				var content = new StringContent(JsonConvert.SerializeObject(input_param));
-				var response = client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
-				var responseString = response.Result.Content.ReadAsStringAsync().Result;
-				return JsonConvert.DeserializeObject<T>(responseString);
-			}
-		}
-
-		public override void Request(NodeInfo node_info, string name, object input_param)
-		{
-			using (var client = new HttpClient())
-			{
-				var content = new StringContent(JsonConvert.SerializeObject(input_param));
-				client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
-			}
-		}
 	}
 }

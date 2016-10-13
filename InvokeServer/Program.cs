@@ -1,8 +1,6 @@
 ﻿using System;
 using Client;
-using Core.Model.Network.DataModel;
 using Core.Model.Network.Node.Service;
-using Core.Model.Server.Service;
 
 namespace InvokeServer
 {

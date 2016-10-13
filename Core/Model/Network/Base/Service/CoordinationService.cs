@@ -9,7 +9,12 @@ namespace Core.Model.Network.Service
 {
 	public class CoordinationService : ICoordinationService
 	{
+		/// <summary>
+		/// Список известных серверов.
+		/// </summary>
 		private List<NodeServerInfo> _nodeList;
+
+		private int _currentNodeCount = 0;
 
 		public CoordinationService()
 		{
@@ -21,16 +26,26 @@ namespace Core.Model.Network.Service
 			return _nodeList;
 		}
 
+		/// <summary>
+		/// Возвращает подходящий вычислительный узел.
+		/// </summary>
+		/// <returns></returns>
 		public NodeServerInfo GetSuitableNode()
 		{
 			if (!_nodeList.Any())
 			{
 				throw new Exception("Отсутствуют доступные узлы.");
 			}
-			
-			return _nodeList.First();
+
+			_currentNodeCount++;
+
+			return _nodeList[_currentNodeCount % _nodeList.Count];
 		}
 
+		/// <summary>
+		/// Добавляет в список известных серверов новый новый узел.
+		/// </summary>
+		/// <param name="node">Данные о сервере.</param>
 		public void AddNode(NodeServerInfo node)
 		{
 			if (!_nodeList.Exists(x => x.Equals(node)))

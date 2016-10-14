@@ -1,8 +1,8 @@
 ﻿using System;
 using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
 
-namespace Core.Model.Invoke.Base.Service
+namespace Core.Model.InvokeMethods.Base.Invoke.Service
 {
 	/// <summary>
 	/// Интерфейс фабрики сервисов исполнения.

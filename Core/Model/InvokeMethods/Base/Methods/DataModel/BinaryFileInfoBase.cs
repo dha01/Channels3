@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Core.Model.Methods.Base.DomainModel
+namespace Core.Model.InvokeMethods.Base.Methods.DataModel
 {
 	/// <summary>
 	/// Информация о библиотеке.

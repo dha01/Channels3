@@ -1,7 +1,7 @@
 ﻿using System;
 using Core.Model.Data.DataModel;
 
-namespace Core.Model.Invoke.Base.Service
+namespace Core.Model.InvokeMethods.Base.Invoke.Service
 {
 	/// <summary>
 	/// Интерфейс сервиса исполнения.

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Methods.Base.Service;
-using MethodBase = System.Reflection.MethodBase;
+﻿using Core.Model.InvokeMethods.Base.Methods.DataModel;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.DataModel;
 
-namespace Core.Model.Methods.CSharp.Service
+namespace Core.Model.InvokeMethods.Local.CSharp.Assembly.Service
 {
 	public interface IAssemblyService
 	{
@@ -24,7 +17,7 @@ namespace Core.Model.Methods.CSharp.Service
 		/// </summary>
 		/// <param name="method_base">Базовое описание метода.</param>
 		/// <returns>Метод.</returns>
-		Base.DomainModel.MethodBase GetMethod(Base.DomainModel.MethodBase method_base);
+		MethodBase GetMethod(MethodBase method_base);
 
 		/// <summary>
 		/// Добавляет библиотеку.
@@ -38,8 +31,8 @@ namespace Core.Model.Methods.CSharp.Service
 		/// <param name="path">Путь к файлу с библиотекой.</param>
 		void AddAssembly(string path);
 		
-		Assembly GetAssembly(string path);
+		System.Reflection.Assembly GetAssembly(string path);
 
-		void AddAssembly(Assembly assembly);
+		void AddAssembly(System.Reflection.Assembly assembly);
 	}
 }

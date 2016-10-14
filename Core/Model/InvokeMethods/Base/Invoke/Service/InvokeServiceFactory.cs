@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
-using Core.Model.Invoke.Base.DataModel;
-using Core.Model.Invoke.Local.CSharp.Service;
-using Core.Model.Invoke.Remote.Service;
-using Core.Model.Methods.Base.Service;
-using Core.Model.Methods.CSharp.DomainModel;
-using Core.Model.Methods.CSharp.Service;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
+using Core.Model.InvokeMethods.Base.Methods.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Invoke.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
+using Core.Model.InvokeMethods.Remote.Service;
 using Core.Model.Network.Service;
 
-namespace Core.Model.Invoke.Base.Service
+namespace Core.Model.InvokeMethods.Base.Invoke.Service
 {
 	/// <summary>
 	/// Фабрика сервисов исполнения.

@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Core.Model.Methods.Base.DomainModel
+namespace Core.Model.InvokeMethods.Base.Methods.DataModel
 {
 	/// <summary>
 	/// Базовое описание исполняемого метода.

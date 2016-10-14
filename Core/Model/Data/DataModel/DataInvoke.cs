@@ -1,5 +1,5 @@
 ﻿using System;
-using Core.Model.Invoke.Base.DataModel;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
 
 namespace Core.Model.Data.DataModel
 {
@@ -32,7 +32,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(Guid id, object value)
 			: base(id, value)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(Guid id)
 			: base(id)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke() 
 			: this(Guid.NewGuid())
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(object value)
 			: this(Guid.NewGuid(), value)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		#endregion
@@ -128,7 +128,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(Guid id, T value)
 			: base(id, value)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(Guid id)
 			: base(id)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke()
 			: this(Guid.NewGuid())
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace Core.Model.Data.DataModel
 		public DataInvoke(T value)
 			: this(Guid.NewGuid(), value)
 		{
-			InvokeType = Invoke.Base.DataModel.InvokeType.Auto;
+			InvokeType = InvokeMethods.Base.Invoke.DataModel.InvokeType.Auto;
 		}
 
 		#endregion

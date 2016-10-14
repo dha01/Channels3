@@ -1,5 +1,5 @@
 ﻿using System;
-using Core.Model.Methods.CSharp.DomainModel;
+using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
 using Core.Model.Network.Node.Service;
 
 namespace Client

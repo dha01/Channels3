@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
-using Core.Model.Invoke.Base.Service;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
+using Core.Model.InvokeMethods.Base.Invoke.Service;
 using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 

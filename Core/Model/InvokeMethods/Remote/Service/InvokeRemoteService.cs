@@ -1,12 +1,12 @@
 ﻿using System;
 using Core.Model.Data.DataModel;
-using Core.Model.Invoke.Base.DataModel;
-using Core.Model.Invoke.Base.Service;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
+using Core.Model.InvokeMethods.Base.Invoke.Service;
 using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 
-namespace Core.Model.Invoke.Remote.Service
+namespace Core.Model.InvokeMethods.Remote.Service
 {
 	/// <summary>
 	/// Сервис удаленного исполнения.

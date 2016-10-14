@@ -1,4 +1,6 @@
-﻿namespace Core.Model.Methods.Base.DomainModel
+﻿using Core.Model.InvokeMethods.Base.Methods.DataModel;
+
+namespace Core.Model.InvokeMethods.Local.CSharp.Assembly.DataModel
 {
 	/// <summary>
 	/// Файл с библиотекой.

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Model.Invoke.Base.Service;
-using Core.Model.Invoke.Local.CSharp.Service;
-using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Methods.CSharp.Service;
+using Core.Model.InvokeMethods.Base.Methods.DataModel;
+using Core.Model.InvokeMethods.Base.Methods.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.DataModel;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.Service;
 
-namespace Core.Model.Methods.Base.Service
+namespace Core.Model.InvokeMethods.Local.CSharp.Methods.Service
 {
 	/// <summary>
 	/// Сервис для работы и хранения методов.

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using Core.Model.Methods.Base.DomainModel;
-using Core.Model.Methods.CSharp.DomainModel;
+using Core.Model.InvokeMethods.Base.Methods.DataModel;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.DataModel;
+using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
 
-namespace Core.Model.Methods.CSharp.Service
+namespace Core.Model.InvokeMethods.Local.CSharp.Assembly.Service
 {
 	/// <summary>
 	/// Сервис для работы с библиотеками C#.
@@ -15,11 +15,11 @@ namespace Core.Model.Methods.CSharp.Service
 	{
 
 		private readonly Dictionary<string, AssemblyFile> _assemblyFiles;
-		private readonly Dictionary<string, Assembly> _assemblies;
+		private readonly Dictionary<string, System.Reflection.Assembly> _assemblies;
 
 		public AssemblyService()
 		{
-			_assemblies = new Dictionary<string, Assembly>();
+			_assemblies = new Dictionary<string, System.Reflection.Assembly>();
 			_assemblyFiles = new Dictionary<string, AssemblyFile>();
 			LoadDefaultAssemblies();
 		}
@@ -60,12 +60,12 @@ namespace Core.Model.Methods.CSharp.Service
 			return _assemblyFiles.ContainsKey(full_assembly_name) ? _assemblyFiles[full_assembly_name] : null;
 		}
 
-		public Assembly GetAssembly(string path)
+		public System.Reflection.Assembly GetAssembly(string path)
 		{
 			return _assemblies.ContainsKey(path) ? _assemblies[path] : null;
 		}
 
-		public Base.DomainModel.MethodBase GetMethod(Base.DomainModel.MethodBase method_base)
+		public MethodBase GetMethod(MethodBase method_base)
 		{
 			var assembly = GetAssembly(method_base.AssemblyPath);
 			if (assembly == null)
@@ -103,14 +103,14 @@ namespace Core.Model.Methods.CSharp.Service
 				return;
 			}
 			
-			var assembly = Assembly.Load(assembly_file.Data);
+			var assembly = System.Reflection.Assembly.Load(assembly_file.Data);
 
 			_assemblies.Add(assembly_file.AssemblyPath, assembly);
 		}
 
 		public void AddAssembly(byte[] bytes)
 		{
-			var assembly = Assembly.Load(bytes);
+			var assembly = System.Reflection.Assembly.Load(bytes);
 
 			var assembly_file = new AssemblyFile
 			{
@@ -127,7 +127,7 @@ namespace Core.Model.Methods.CSharp.Service
 			AddAssembly(File.ReadAllBytes(path));
 		}
 
-		public void AddAssembly(Assembly assembly)
+		public void AddAssembly(System.Reflection.Assembly assembly)
 		{
 			AddAssembly(assembly.Location);
 		}

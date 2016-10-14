@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
-using Core.Model.Invoke.Base.DataModel;
-using Core.Model.Invoke.Base.Service;
-using Core.Model.Methods.Base.Service;
-using Core.Model.Methods.CSharp.DomainModel;
-using Core.Model.Methods.CSharp.Service;
+using Core.Model.InvokeMethods.Base.Invoke.DataModel;
+using Core.Model.InvokeMethods.Base.Invoke.Service;
+using Core.Model.InvokeMethods.Base.Methods.DataModel;
+using Core.Model.InvokeMethods.Base.Methods.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Assembly.Service;
+using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
 using Core.Model.Network.Service;
 
-namespace Core.Model.Invoke.Local.CSharp.Service
+namespace Core.Model.InvokeMethods.Local.CSharp.Invoke.Service
 {
 	/// <summary>
 	/// Сервис исполнения методов C#.
@@ -71,7 +71,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 		/// </summary>
 		/// <param name="method">Базовое описание исполняемого метода.</param>
 		/// <returns>Исполняемый метод C#.</returns>
-		private CSharpMethod GetMethod(Methods.Base.DomainModel.MethodBase method)
+		private CSharpMethod GetMethod(MethodBase method)
 		{
 			var result = (CSharpMethod)_methodService.GetMethod(method);
 			if (result == null)
@@ -89,7 +89,7 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 					throw new Exception(string.Format("InvokeCSharpService -> Библиотека не найдена: {0}", method.AssemblyPath));
 				}
 
-				var assembly = Assembly.Load(assembly_file.Data);
+				var assembly = System.Reflection.Assembly.Load(assembly_file.Data);
 				var type = assembly.GetType(method.TypeName);
 				result.MethodInfo = type.GetMethod(method.MethodName, method.InputParamsTypeNames.Select(Type.GetType).ToArray());
 			}

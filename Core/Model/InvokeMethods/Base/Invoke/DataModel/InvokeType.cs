@@ -1,4 +1,4 @@
-﻿namespace Core.Model.Invoke.Base.DataModel
+﻿namespace Core.Model.InvokeMethods.Base.Invoke.DataModel
 {
 	/// <summary>
 	/// Тип исполнения.

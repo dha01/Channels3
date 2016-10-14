@@ -1,6 +1,6 @@
-﻿using Core.Model.Methods.Base.DomainModel;
+﻿using Core.Model.InvokeMethods.Base.Methods.DataModel;
 
-namespace Core.Model.Methods.Base.Service
+namespace Core.Model.InvokeMethods.Base.Methods.Service
 {
 	/// <summary>
 	/// Интерфейс сервиса для работы и хранения методов.

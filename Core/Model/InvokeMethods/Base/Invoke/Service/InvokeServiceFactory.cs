@@ -48,6 +48,8 @@ namespace Core.Model.Invoke.Base.Service
 		/// </summary>
 		private readonly Dictionary<Type, IInvokeService> _serviceDictionary;
 
+		private readonly RemoteInvokeService _remoteInvokeService;
+
 		#endregion
 
 		#region Constructor
@@ -68,13 +70,13 @@ namespace Core.Model.Invoke.Base.Service
 			_coordinationService = coordination_service;
 			_webServerService = web_server_service;
 
-			var remote_invoke_service = new RemoteInvokeService(_coordinationService, _webServerService);
+			_remoteInvokeService = new RemoteInvokeService(_coordinationService, _webServerService);
 			var invoke_c_sharp_method = new InvokeCSharpService(_assemblyService, _methodService, data_service);
 			
 			_serviceDictionary = new Dictionary<Type, IInvokeService>
 			{
-				{typeof(RemoteInvokeService), remote_invoke_service},
-				{typeof(InvokeCSharpService), invoke_c_sharp_method},
+				/*{typeof(RemoteInvokeService), remote_invoke_service},
+				{typeof(InvokeCSharpService), invoke_c_sharp_method},*/
 				{typeof(CSharpMethod), invoke_c_sharp_method}
 			};
 		}
@@ -109,15 +111,15 @@ namespace Core.Model.Invoke.Base.Service
 					switch (invoked_data.InvokeType)
 					{
 						case InvokeType.Remote:
-							return _serviceDictionary[typeof(RemoteInvokeService)];
+							return _remoteInvokeService;
 						case InvokeType.Local:
-							return _serviceDictionary[_methodService.GetMethod(invoked_data.Method).GetType()];
+							return _serviceDictionary[invoked_data.Method.MethodType];
 					}
 					break;
 				case InvokeType.Remote:
-					return _serviceDictionary[typeof(RemoteInvokeService)];
+					return _remoteInvokeService;
 				case InvokeType.Local:
-					return _serviceDictionary[_methodService.GetMethod(invoked_data.Method).GetType()];
+					return _serviceDictionary[invoked_data.Method.MethodType];
 			}
 
 			throw new Exception(string.Format("InvokeServiceFactory.GetInvokeService -> Тип {0} недопустим.", invoked_data.InvokeType));

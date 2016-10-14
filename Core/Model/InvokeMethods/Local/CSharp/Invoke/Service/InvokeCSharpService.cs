@@ -103,8 +103,17 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 		/// <param name="callback">Событие при завершении исполнения.</param>
 		protected override void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback)
 		{
-			var method = GetMethod(invoked_data.Method);
-
+			CSharpMethod method;
+			
+			try
+			{
+				method = GetMethod(invoked_data.Method);
+			}
+			catch (Exception e)
+			{
+				throw new Exception(string.Format("InvokeCSharpService->InvokeMethod Ошибка при получении метода: {0}", e.Message));
+			}
+			
 			try
 			{
 				var inputs = invoked_data.InputIds.Select(x => _dataService.Get(x).Value).ToArray();
@@ -116,7 +125,15 @@ namespace Core.Model.Invoke.Local.CSharp.Service
 			{
 				invoked_data.Value = e.InnerException;
 			}
-			callback.Invoke(invoked_data);
+
+			try
+			{
+				callback.Invoke(invoked_data);
+			}
+			catch (Exception e)
+			{
+				throw new Exception(string.Format("InvokeCSharpService->InvokeMethod Ошибка при вызове события по завершению исполнения: {0}", e.Message));
+			}
 		}
 
 		#endregion

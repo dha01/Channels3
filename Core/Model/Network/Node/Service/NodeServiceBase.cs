@@ -81,8 +81,8 @@ namespace Core.Model.Network.Node.Service
 			//_sendRequestService = new SendRequestService();
 			_dataService = new DataService<DataInvoke>();
 			_cSharpAssemblyService = new CSharpAssemblyService();
-			_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
-			_methodService = new MethodService(_assemblyServiceFactory);
+			//_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
+			_methodService = new CSharpMethodService(_cSharpAssemblyService);
 			_coordinationService = new CoordinationService();
 			//_sendRequestService = new SendRequestService();
 
@@ -98,8 +98,8 @@ namespace Core.Model.Network.Node.Service
 			//_sendRequestService = new SendRequestService();
 			_dataService = data_service;
 			_cSharpAssemblyService = c_sharp_assembly_service;
-			_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
-			_methodService = new MethodService(_assemblyServiceFactory);
+			//_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
+			_methodService = new CSharpMethodService(_cSharpAssemblyService);
 			_coordinationService = new CoordinationService();
 			_dataCollectorService = data_collector_service;
 

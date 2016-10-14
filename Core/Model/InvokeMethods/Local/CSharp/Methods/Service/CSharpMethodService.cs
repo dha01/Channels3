@@ -13,7 +13,7 @@ namespace Core.Model.Methods.Base.Service
 	/// <summary>
 	/// Сервис для работы и хранения методов.
 	/// </summary>
-	public class MethodService : IMethodService
+	public class CSharpMethodService : IMethodService
 	{
 		private readonly Dictionary<string, MethodBase> _methodDictionary;
 
@@ -26,14 +26,18 @@ namespace Core.Model.Methods.Base.Service
 		/// </summary>
 		private readonly IAssemblyServiceFactory _assemblyServiceFactory;
 
+		private readonly ICSharpAssemblyService _cSharpAssemblyService;
+
 		/// <summary>
 		/// Инициализирует сервис.
 		/// </summary>
 		/// <param name="assembly_service_factory">Фабрика сервиса пространства имен.</param>
-		public MethodService(IAssemblyServiceFactory assembly_service_factory)
+		public CSharpMethodService(ICSharpAssemblyService c_sharp_assembly_service)
 		{
 			_methodDictionary = new Dictionary<string, MethodBase>();
-			_assemblyServiceFactory = assembly_service_factory;
+			//_assemblyServiceFactory = assembly_service_factory;
+
+			_cSharpAssemblyService = c_sharp_assembly_service;
 		}
 
 		/// <summary>
@@ -62,7 +66,7 @@ namespace Core.Model.Methods.Base.Service
 				return _methodDictionary[method_base.FullPath];
 			}
 
-			var method = _assemblyServiceFactory.GetAssemblyService(method_base).GetMethod(method_base);
+			var method = _cSharpAssemblyService.GetMethod(method_base);
 
 			if (method == null)
 			{

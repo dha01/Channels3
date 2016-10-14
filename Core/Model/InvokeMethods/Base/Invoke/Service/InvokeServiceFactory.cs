@@ -91,6 +91,7 @@ namespace Core.Model.Invoke.Base.Service
 		/// <param name="action">Событие.</param>
 		public void AddOnDequeueEvent(Action<DataInvoke> action)
 		{
+			_remoteInvokeService.OnAfterInvoke += action;
 			foreach (var service in _serviceDictionary)
 			{
 				service.Value.OnAfterInvoke += action;

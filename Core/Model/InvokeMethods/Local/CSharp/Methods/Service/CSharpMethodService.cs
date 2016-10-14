@@ -21,18 +21,13 @@ namespace Core.Model.Methods.Base.Service
 		private Dictionary<Guid, AssemblyFile> _assemblyDictionary;
 		private Dictionary<Guid, Dictionary<Guid, MethodBase>> _methodByAssemblyDictionary;
 
-		/// <summary>
-		/// Фабрика сервиса пространства имен.
-		/// </summary>
-		private readonly IAssemblyServiceFactory _assemblyServiceFactory;
-
-		private readonly ICSharpAssemblyService _cSharpAssemblyService;
+		private readonly IAssemblyService _cSharpAssemblyService;
 
 		/// <summary>
 		/// Инициализирует сервис.
 		/// </summary>
 		/// <param name="assembly_service_factory">Фабрика сервиса пространства имен.</param>
-		public CSharpMethodService(ICSharpAssemblyService c_sharp_assembly_service)
+		public CSharpMethodService(IAssemblyService c_sharp_assembly_service)
 		{
 			_methodDictionary = new Dictionary<string, MethodBase>();
 			//_assemblyServiceFactory = assembly_service_factory;

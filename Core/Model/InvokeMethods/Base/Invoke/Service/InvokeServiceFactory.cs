@@ -7,6 +7,7 @@ using Core.Model.Invoke.Local.CSharp.Service;
 using Core.Model.Invoke.Remote.Service;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.DomainModel;
+using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.Service;
 
 namespace Core.Model.Invoke.Base.Service

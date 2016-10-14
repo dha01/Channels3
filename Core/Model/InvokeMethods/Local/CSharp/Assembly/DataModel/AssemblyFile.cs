@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Файл с библиотекой.
 	/// </summary>
-	public class AssemblyFile : AssemblyInfo
+	public class AssemblyFile : BinaryFileInfoBase
 	{
 		/// <summary>
 		/// Бинарный файл библиотеки.

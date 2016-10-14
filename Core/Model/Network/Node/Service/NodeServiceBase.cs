@@ -38,12 +38,7 @@ namespace Core.Model.Network.Node.Service
 		/// <summary>
 		/// Сервис для работы с библиотеками C#.
 		/// </summary>
-		protected ICSharpAssemblyService _cSharpAssemblyService;
-
-		/// <summary>
-		/// Фабрика сервисов библиотек.
-		/// </summary>
-		protected IAssemblyServiceFactory _assemblyServiceFactory;
+		protected IAssemblyService _cSharpAssemblyService;
 
 		/// <summary>
 		/// Сервис для работы и хранения методов.
@@ -80,7 +75,7 @@ namespace Core.Model.Network.Node.Service
 			_port = web_server_service.Port;
 			//_sendRequestService = new SendRequestService();
 			_dataService = new DataService<DataInvoke>();
-			_cSharpAssemblyService = new CSharpAssemblyService();
+			_cSharpAssemblyService = new AssemblyService();
 			//_assemblyServiceFactory = new AssemblyServiceFactory(_cSharpAssemblyService);
 			_methodService = new CSharpMethodService(_cSharpAssemblyService);
 			_coordinationService = new CoordinationService();
@@ -92,7 +87,7 @@ namespace Core.Model.Network.Node.Service
 			_dataCollectorService = new DataCollectorService(invoke_type, _invokeServiceFactory, _dataService, _webServerService);
 		}
 
-		public NodeServiceBase(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, ICSharpAssemblyService c_sharp_assembly_service)
+		public NodeServiceBase(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, IAssemblyService c_sharp_assembly_service)
 		{
 			_port = web_server_service.Port;
 			//_sendRequestService = new SendRequestService();
@@ -108,14 +103,13 @@ namespace Core.Model.Network.Node.Service
 			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService);
 		}
 
-		public NodeServiceBase(IDataService<DataInvoke> data_service, ICSharpAssemblyService c_sharp_assembly_service, IAssemblyServiceFactory assembly_service_factory,
+		public NodeServiceBase(IDataService<DataInvoke> data_service, IAssemblyService c_sharp_assembly_service,
 			IMethodService method_service, ICoordinationService coordination_service, IInvokeServiceFactory invoke_service_factory, IDataCollectorService data_collector_service, IWebServerService web_server_service)
 		{
 			_port = web_server_service.Port;
 			//_sendRequestService = send_request_service;
 			_dataService = data_service;
 			_cSharpAssemblyService = c_sharp_assembly_service;
-			_assemblyServiceFactory = assembly_service_factory;
 			_methodService = method_service;
 			_coordinationService = coordination_service;
 			_invokeServiceFactory = invoke_service_factory;

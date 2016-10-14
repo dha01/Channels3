@@ -66,17 +66,14 @@
     <Compile Include="Model\InvokeMethods\Base\Invoke\Service\InvokeServiceBase.cs" />
     <Compile Include="Model\InvokeMethods\Remote\Service\InvokeRemoteService.cs" />
     <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\AssemblyFile.cs" />
-    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\AssemblyInfo.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Methods\DataModel\BinaryFileInfoBase.cs" />
     <Compile Include="Model\InvokeMethods\Base\Methods\DataModel\MethodBase.cs" />
-    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\AssemblyServiceFactory.cs" />
-    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\IAssemblyServiceFactory.cs" />
     <Compile Include="Model\InvokeMethods\Base\Methods\Service\IMethodService.cs" />
     <Compile Include="Model\InvokeMethods\Local\CSharp\Methods\Service\CSharpMethodService.cs" />
     <Compile Include="Model\InvokeMethods\Local\CSharp\Methods\DataModel\CSharpMethod.cs" />
-    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\CSharpAssemblyInfo.cs" />
-    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\CSharpAssemblyService.cs" />
-    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\IAssemblyService.cs" />
-    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\ICSharpAssemblyService.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\AssemblyInfo.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\AssemblyService.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\IAssemblyService.cs" />
     <Compile Include="Model\Network\Base\DataModel\NodeServerInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\NodeInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\Request.cs" />
@@ -106,9 +103,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\InvokeMethods\Base\Assembly\DataModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

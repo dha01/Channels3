@@ -1,29 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Core.Model.Methods.Base.DomainModel
+namespace Core.Model.Methods.CSharp.DomainModel
 {
-	/// <summary>
-	/// Информация о библиотеке.
-	/// </summary>
 	public class AssemblyInfo
 	{
-		/// <summary>
-		/// Название пространства имен.
-		/// </summary>
-		public string Namespace { get; set; }
-
-		/// <summary>
-		/// Версия.
-		/// </summary>
-		public string Version { get; set; }
-
-		/// <summary>
-		/// Строка с путем к файлу по которому его можно идентифицировать.
-		/// </summary>
-		[JsonIgnore]
-		public string AssemblyPath
-		{
-			get { return string.Format("{0}{1}", Namespace, Version); }
-		}
+		public Guid Id { get; set; }
+		public byte[] Assembly { get; set; }
+		public List<CSharpMethod> CSharpMethods { get; set; }
 	}
 }

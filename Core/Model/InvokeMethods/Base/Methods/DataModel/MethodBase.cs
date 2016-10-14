@@ -7,7 +7,7 @@ namespace Core.Model.Methods.Base.DomainModel
 	/// <summary>
 	/// Базовое описание исполняемого метода.
 	/// </summary>
-	public class MethodBase : AssemblyInfo
+	public class MethodBase : BinaryFileInfoBase
 	{
 		/// <summary>
 		/// Тип класса метода.

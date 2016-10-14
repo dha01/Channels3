@@ -11,20 +11,20 @@ namespace Core.Model.Methods.CSharp.Service
 	/// <summary>
 	/// Сервис для работы с библиотеками C#.
 	/// </summary>
-	public class CSharpAssemblyService : ICSharpAssemblyService
+	public class AssemblyService : IAssemblyService
 	{
 
 		private readonly Dictionary<string, AssemblyFile> _assemblyFiles;
 		private readonly Dictionary<string, Assembly> _assemblies;
 
-		public CSharpAssemblyService()
+		public AssemblyService()
 		{
 			_assemblies = new Dictionary<string, Assembly>();
 			_assemblyFiles = new Dictionary<string, AssemblyFile>();
 			LoadDefaultAssemblies();
 		}
 
-		public CSharpAssemblyService(IEnumerable<string> paths) 
+		public AssemblyService(IEnumerable<string> paths) 
 			: this()
 		{
 			foreach (var path in paths)

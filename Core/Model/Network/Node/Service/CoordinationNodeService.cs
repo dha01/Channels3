@@ -38,17 +38,17 @@ namespace Core.Model.Network.Node.Service
 			_notificationService.AddAction(OnReceiveNotify);
 		}
 
-		public CoordinationNodeService(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, ICSharpAssemblyService c_sharp_assembly_service)
+		public CoordinationNodeService(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, IAssemblyService c_sharp_assembly_service)
 			: base(web_server_service, data_service, data_collector_service, c_sharp_assembly_service)
 		{
 			_notificationService = new NotificationService(new UdpServerService(UdpServerService.BROADCAST_PORT));
 			_notificationService.AddAction(OnReceiveNotify);
 		}
 
-		public CoordinationNodeService( IDataService<DataInvoke> data_service, ICSharpAssemblyService c_sharp_assembly_service, IAssemblyServiceFactory assembly_service_factory,
+		public CoordinationNodeService( IDataService<DataInvoke> data_service, IAssemblyService c_sharp_assembly_service,
 			IMethodService method_service, ICoordinationService coordination_service, IInvokeServiceFactory invoke_service_factory, IDataCollectorService data_collector_service, IWebServerService web_server_service,
 			INotificationService notification_service)
-			: base(data_service, c_sharp_assembly_service, assembly_service_factory, method_service, coordination_service, invoke_service_factory, data_collector_service, web_server_service)
+			: base(data_service, c_sharp_assembly_service, method_service, coordination_service, invoke_service_factory, data_collector_service, web_server_service)
 		{
 			_notificationService = notification_service;
 			_notificationService.AddAction(OnReceiveNotify);

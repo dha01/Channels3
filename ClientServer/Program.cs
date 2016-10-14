@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
+using Core.Model.InvokeMethods.Local.ExecutableFile.Methods.DataModel;
 using Core.Model.Network.Node.Service;
 using Core.Model.Network.Service;
 
@@ -58,6 +59,9 @@ namespace ClientServer
 					case "Sum":
 						Console.WriteLine(Sum(int.Parse(command[1]), int.Parse(command[2])));
 						break;
+					case "Text":
+						Console.WriteLine(Text());
+						break;
 				}
 			}
 			catch (Exception e)
@@ -75,6 +79,20 @@ namespace ClientServer
 		static void RunInvokeServer()
 		{
 			_invokeNodeService = new InvokeNodeService();
+		}
+
+		static string Text()
+		{
+			var method = new ExecutableFileMethod
+			{
+				Namespace = "",
+				Version = "1.0.0.0",
+				TypeName = "",
+				MethodName = "Text.exe",
+				InputParamsTypeNames = new string[] { }
+			};
+
+			return method.Invoke<string>().Result();
 		}
 
 		static int Sum(int a, int b)

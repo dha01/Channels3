@@ -171,58 +171,65 @@ namespace Core.Model.Data.Service
 		/// <param name="invoked_data"></param>
 		private void OnDequeue(DataInvoke invoked_data)
 		{
-			var exists_value = _dataService.Get(invoked_data.Id);
-			
-			// Запрос на возвращение данных.
-			if (invoked_data.IsRequestData)
+			try
 			{
-				if (exists_value == null || !exists_value.HasValue)
-				{
-					Invoke(invoked_data);
-					return;
-				}
-				
-				ManualResetEvent requested_result;
-				_requestedResults.TryRemove(invoked_data.Id, out requested_result);
-				if (requested_result != null)
-				{
-					requested_result.Set();
-				}
-				return;
-			}
+				var exists_value = _dataService.Get(invoked_data.Id);
 
-			// Запрос на добавление данных.
-			if (exists_value == null)
-			{
-				// Новое значение.
-				AddNewInvokedData(invoked_data);
-			}
-			else
-			{
-				// Смена состяния.
-				var new_state = GetState(invoked_data);
-				if (exists_value.DataState == new_state)
+				// Запрос на возвращение данных.
+				if (invoked_data.IsRequestData)
 				{
-					return;
-				}
-				exists_value.DataState = new_state;
-			}
-
-			// Действия в зависимости от состояния.
-			switch (invoked_data.DataState)
-			{
-				case DataState.NotReadyForInvoke:
-					CheckNotReadyValue(invoked_data);
-					break;
-				case DataState.ReadyForInvoke:
-					_invokeServiceFactory.GetInvokeService(invoked_data, _invokeType).Invoke(invoked_data);
-					break;
-				case DataState.Complite:
-					foreach (var data in _dataService.GetChilds(invoked_data.Id))
+					if (exists_value == null || !exists_value.HasValue)
 					{
-						Invoke(data);
+						Invoke(invoked_data);
+						return;
 					}
-					break;
+
+					ManualResetEvent requested_result;
+					_requestedResults.TryRemove(invoked_data.Id, out requested_result);
+					if (requested_result != null)
+					{
+						requested_result.Set();
+					}
+					return;
+				}
+
+				// Запрос на добавление данных.
+				if (exists_value == null)
+				{
+					// Новое значение.
+					AddNewInvokedData(invoked_data);
+				}
+				else
+				{
+					// Смена состяния.
+					var new_state = GetState(invoked_data);
+					if (exists_value.DataState == new_state)
+					{
+						return;
+					}
+					exists_value.DataState = new_state;
+				}
+
+				// Действия в зависимости от состояния.
+				switch (invoked_data.DataState)
+				{
+					case DataState.NotReadyForInvoke:
+						CheckNotReadyValue(invoked_data);
+						break;
+					case DataState.ReadyForInvoke:
+						_invokeServiceFactory.GetInvokeService(invoked_data, _invokeType).Invoke(invoked_data);
+						break;
+					case DataState.Complite:
+						foreach (var data in _dataService.GetChilds(invoked_data.Id))
+						{
+							Invoke(data);
+						}
+						break;
+				}
+			}
+			catch (Exception e)
+			{
+				throw new Exception(string.Format("DataCollectorService->Неизвестная ошибка: {0}", e.Message));
 			}
 		}
 

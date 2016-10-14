@@ -7,6 +7,10 @@ using Core.Model.InvokeMethods.Base.Methods.Service;
 using Core.Model.InvokeMethods.Local.CSharp.Assembly.Service;
 using Core.Model.InvokeMethods.Local.CSharp.Invoke.Service;
 using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
+using Core.Model.InvokeMethods.Local.CSharp.Methods.Service;
+using Core.Model.InvokeMethods.Local.ExecutableFile.Invoke.Service;
+using Core.Model.InvokeMethods.Local.ExecutableFile.Methods.DataModel;
+using Core.Model.InvokeMethods.Local.ExecutableFile.Methods.Service;
 using Core.Model.InvokeMethods.Remote.Service;
 using Core.Model.Network.Service;
 
@@ -73,12 +77,14 @@ namespace Core.Model.InvokeMethods.Base.Invoke.Service
 
 			_remoteInvokeService = new RemoteInvokeService(_coordinationService, _webServerService);
 			var invoke_c_sharp_method = new InvokeCSharpService(_assemblyService, _methodService, data_service);
+			var invoke_executable_file = new InvokeExecutableFileService(new ExecutableFileMethodService(), data_service);
 			
 			_serviceDictionary = new Dictionary<Type, IInvokeService>
 			{
 				/*{typeof(RemoteInvokeService), remote_invoke_service},
 				{typeof(InvokeCSharpService), invoke_c_sharp_method},*/
-				{typeof(CSharpMethod), invoke_c_sharp_method}
+				{typeof(CSharpMethod), invoke_c_sharp_method},
+				{typeof(ExecutableFileMethod), invoke_executable_file}
 			};
 		}
 

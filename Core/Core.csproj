@@ -64,6 +64,9 @@
     <Compile Include="Model\InvokeMethods\Base\Invoke\Service\IInvokeService.cs" />
     <Compile Include="Model\InvokeMethods\Base\Invoke\Service\InvokeServiceFactory.cs" />
     <Compile Include="Model\InvokeMethods\Base\Invoke\Service\InvokeServiceBase.cs" />
+    <Compile Include="Model\InvokeMethods\Local\ExecutableFile\Invoke\Service\InvokeExecutableFileService.cs" />
+    <Compile Include="Model\InvokeMethods\Local\ExecutableFile\Methods\DataModel\ExecutableFileMethod.cs" />
+    <Compile Include="Model\InvokeMethods\Local\ExecutableFile\Methods\Service\ExecutableFileMethodService.cs" />
     <Compile Include="Model\InvokeMethods\Remote\Service\InvokeRemoteService.cs" />
     <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\AssemblyFile.cs" />
     <Compile Include="Model\InvokeMethods\Base\Methods\DataModel\BinaryFileInfoBase.cs" />

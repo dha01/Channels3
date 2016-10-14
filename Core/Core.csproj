@@ -56,27 +56,27 @@
     <Compile Include="Model\Data\Service\DataService.cs" />
     <Compile Include="Model\Data\Service\IDataService.cs" />
     <Compile Include="Model\Data\DataModel\DataInvoke.cs" />
-    <Compile Include="Model\Invoke\Base\DataModel\InvokeType.cs" />
-    <Compile Include="Model\Invoke\Base\Service\IInvokeServiceFactory.cs" />
-    <Compile Include="Model\Invoke\Local\CSharp\Service\InvokeCSharpService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Invoke\DataModel\InvokeType.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Invoke\Service\IInvokeServiceFactory.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Invoke\Service\InvokeCSharpService.cs" />
     <Compile Include="Model\Data\Service\DataCollectorService.cs" />
     <Compile Include="Model\Data\Service\IDataCollectorService.cs" />
-    <Compile Include="Model\Invoke\Base\Service\IInvokeService.cs" />
-    <Compile Include="Model\Invoke\Base\Service\InvokeServiceFactory.cs" />
-    <Compile Include="Model\Invoke\Base\Service\InvokeServiceBase.cs" />
-    <Compile Include="Model\Invoke\Remote\Service\InvokeRemoteService.cs" />
-    <Compile Include="Model\Methods\Base\DomainModel\AssemblyFile.cs" />
-    <Compile Include="Model\Methods\Base\DomainModel\AssemblyInfo.cs" />
-    <Compile Include="Model\Methods\Base\DomainModel\MethodBase.cs" />
-    <Compile Include="Model\Methods\Base\Service\AssemblyServiceFactory.cs" />
-    <Compile Include="Model\Methods\Base\Service\IAssemblyServiceFactory.cs" />
-    <Compile Include="Model\Methods\Base\Service\IMethodService.cs" />
-    <Compile Include="Model\Methods\Base\Service\MethodService.cs" />
-    <Compile Include="Model\Methods\CSharp\DomainModel\CSharpMethod.cs" />
-    <Compile Include="Model\Methods\CSharp\DomainModel\CSharpAssemblyInfo.cs" />
-    <Compile Include="Model\Methods\CSharp\Service\CSharpAssemblyService.cs" />
-    <Compile Include="Model\Methods\Base\Service\IAssemblyService.cs" />
-    <Compile Include="Model\Methods\CSharp\Service\ICSharpAssemblyService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Invoke\Service\IInvokeService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Invoke\Service\InvokeServiceFactory.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Invoke\Service\InvokeServiceBase.cs" />
+    <Compile Include="Model\InvokeMethods\Remote\Service\InvokeRemoteService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Assembly\DataModel\AssemblyFile.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Assembly\DataModel\AssemblyInfo.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Methods\DataModel\MethodBase.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\AssemblyServiceFactory.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\IAssemblyServiceFactory.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Methods\Service\IMethodService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Methods\Service\MethodService.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Methods\DataModel\CSharpMethod.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\DataModel\CSharpAssemblyInfo.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\CSharpAssemblyService.cs" />
+    <Compile Include="Model\InvokeMethods\Base\Assembly\Service\IAssemblyService.cs" />
+    <Compile Include="Model\InvokeMethods\Local\CSharp\Assembly\Service\ICSharpAssemblyService.cs" />
     <Compile Include="Model\Network\Base\DataModel\NodeServerInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\NodeInfo.cs" />
     <Compile Include="Model\Network\Base\DataModel\Request.cs" />
@@ -106,6 +106,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

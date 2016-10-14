@@ -9,7 +9,7 @@ using Core.Model.Network.Base.DataModel;
 namespace Core.Model.Network.Service
 {
 	/// <summary>
-	/// Базовый класс сервиса приема и передачи данных по сети.
+	/// Базовый сервис приема и передачи данных по сети.
 	/// </summary>
 	[WebClass(Namespace = "Base")]
 	public abstract class WebServerServiceBase : IWebServerService

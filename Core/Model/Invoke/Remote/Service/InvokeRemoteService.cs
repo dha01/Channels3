@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Core.Model.Data.DataModel;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Base.Service;
@@ -10,23 +7,54 @@ using Core.Model.Network.Service;
 
 namespace Core.Model.Invoke.Remote.Service
 {
+	/// <summary>
+	/// Сервис удаленного исполнения.
+	/// </summary>
 	public class RemoteInvokeService : InvokeServiceBase
 	{
+		#region Fields
+
+		/// <summary>
+		/// Сервиса приема и передачи данных по сети.
+		/// </summary>
 		private readonly IWebServerService _webServerService;
+
+		/// <summary>
+		/// Сервис координации.
+		/// </summary>
 		private readonly ICoordinationService _coordinationService;
 
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Устанавливает сервисы по умолчанию
+		/// </summary>
 		public RemoteInvokeService()
 			:this(new CoordinationService(), new HttpServerService())
 		{
 			
 		}
 
+		/// <summary>
+		/// Устанавливает указанные сервисы.
+		/// </summary>
+		/// <param name="coordination_service">Сервис координации.</param>
+		/// <param name="web_server_service">Сервиса приема и передачи данных по сети.</param>
 		public RemoteInvokeService(ICoordinationService coordination_service, IWebServerService web_server_service)
 		{
 			_coordinationService = coordination_service;
 			_webServerService = web_server_service;
 		}
-		
+
+		#endregion
+
+		#region Methods/Private
+
+		/// <summary>
+		/// Тип исполнения.
+		/// </summary>
 		protected override InvokeType InvokeType
 		{
 			get
@@ -35,6 +63,11 @@ namespace Core.Model.Invoke.Remote.Service
 			}
 		}
 
+		/// <summary>
+		/// Исполнение метода.
+		/// </summary>
+		/// <param name="invoked_data">Исполняемые данные.</param>
+		/// <param name="callback">Функция, вызываемая по окончанию исполнения.</param>
 		protected override void InvokeMethod(DataInvoke invoked_data, Action<DataInvoke> callback)
 		{
 			var node = _coordinationService.GetSuitableNode();
@@ -48,5 +81,7 @@ namespace Core.Model.Invoke.Remote.Service
 			
 			callback.Invoke(invoked_data);
 		}
+
+		#endregion
 	}
 }

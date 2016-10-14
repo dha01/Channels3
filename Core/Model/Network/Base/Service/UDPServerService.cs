@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
@@ -13,75 +11,23 @@ using Newtonsoft.Json;
 
 namespace Core.Model.Network.Base.Service
 {
+	/// <summary>
+	/// Сервис приема и передачи данных по протоколу UDP.
+	/// </summary>
 	public class UdpServerService : WebServerServiceBase, IUdpServerService
 	{
+		#region Static
+
 		/// <summary>
 		/// Порт для отправки сообщений по протоколу UDP.
 		/// </summary>
 		public static int UdpPingPort = GetRandomPort();
 
-
-		public const string BROADCAST_ADDRESS = "224.0.0.0";
-		public const int BROADCAST_PORT = 6666;
-
-		public UdpServerService()
-		{
-		}
-
-		public UdpServerService(int port)
-		{
-			Task.Run(() =>
-			{
-				UdpClient udp_client = new UdpClient(BROADCAST_PORT);
-				udp_client.JoinMulticastGroup(IPAddress.Parse(BROADCAST_ADDRESS), 50);
-				while (true)
-				{
-					try
-					{
-						ReceiveUdpMessage(udp_client);
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine("UdpServer.Start.Task: {0}", ex.Message);
-					}
-				}
-			});
-		}
-		
-		public override void AddWebMethod(string root, MethodInfo method)
-		{
-			_routes.Add(string.Format(@"/{0}/{1}", root, method.Name), method);
-		}
-
-		public override T Request<T>(NodeInfo node_info, string name, object input_param)
-		{
-			/*using (var client = new HttpClient())
-			{
-				var content = new StringContent(JsonConvert.SerializeObject(input_param));
-				var response = client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
-				var responseString = response.Result.Content.ReadAsStringAsync().Result;
-				return JsonConvert.DeserializeObject<T>(responseString);
-			}*/
-			return JsonConvert.DeserializeObject<T>("");
-		}
-
-		public void BroadcastRequest(string name, object input_param)
-		{
-			Request(null, name, input_param);
-		}
-
-		public override void Request(NodeInfo node_info, string name, object input_param)
-		{
-			var json_input = JsonConvert.SerializeObject(input_param);
-			var str = string.Format("{0}\n{1}\n", name, json_input);
-			var message = Encoding.ASCII.GetBytes(str);
-			SendUdpMessage(message, node_info);
-		}
-
 		/// <summary>
 		/// Отправляет сообщение по протоколу UDP.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">Массив байт с передаваемым сообщением.</param>
+		/// <param name="node_info">Информация о сетевом узле.</param>
 		public static void SendUdpMessage(byte[] message, NodeInfo node_info)
 		{
 			if (node_info == null)
@@ -92,7 +38,7 @@ namespace Core.Model.Network.Base.Service
 					Port = BROADCAST_PORT
 				};
 			}
-			
+
 			try
 			{
 				var sender = new UdpClient(UdpPingPort);
@@ -119,6 +65,110 @@ namespace Core.Model.Network.Base.Service
 			}
 		}
 
+		#endregion
+
+		#region Constants
+
+		/// <summary>
+		/// Широковещательный IP-адрес.
+		/// </summary>
+		public const string BROADCAST_ADDRESS = "224.0.0.0";
+
+		/// <summary>
+		/// Широковещательный порт.
+		/// </summary>
+		public const int BROADCAST_PORT = 6666;
+
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Создает экземпляр класса только для отправки запросов без создания сервера.
+		/// </summary>
+		public UdpServerService()
+		{
+		}
+
+		/// <summary>
+		/// Создает UDP сервер, который принимает запросы.
+		/// </summary>
+		/// <param name="port">Порт.</param>
+		public UdpServerService(int port)
+		{
+			Task.Run(() =>
+			{
+				var udp_client = new UdpClient(port);
+				udp_client.JoinMulticastGroup(IPAddress.Parse(BROADCAST_ADDRESS), 50);
+				while (true)
+				{
+					try
+					{
+						ReceiveUdpMessage(udp_client);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("UdpServer.Start.Task: {0}", ex.Message);
+					}
+				}
+			});
+		}
+
+		#endregion
+
+		#region Methods / Public
+
+		/// <summary>
+		/// Добавляет сетевой метод.
+		/// </summary>
+		/// <param name="root">Корень.</param>
+		/// <param name="method">Метод.</param>
+		public override void AddWebMethod(string root, MethodInfo method)
+		{
+			_routes.Add(string.Format(@"/{0}/{1}", root, method.Name), method);
+		}
+
+		/// <summary>
+		/// Запрашивает исполнение сетевого метода на удаленном узле и ожидает результата.
+		/// </summary>
+		/// <typeparam name="T">Тип результата.</typeparam>
+		/// <param name="node_info">Информация об удаленном сетевом узле.</param>
+		/// <param name="name">Название метода.</param>
+		/// <param name="input_param">Входной параметр.</param>
+		/// <returns>Результат исполнения.</returns>
+		public override T Request<T>(NodeInfo node_info, string name, object input_param)
+		{
+			throw new NotImplementedException("Для протокола UDP не реализовано возвращение ответа.");
+		}
+
+		/// <summary>
+		/// Запрашивает исполнение сетевого метода на удаленном узле по широковещательному адресу.
+		/// </summary>
+		/// <param name="name">Название метода.</param>
+		/// <param name="input_param">Входной параметр.</param>
+		public void BroadcastRequest(string name, object input_param)
+		{
+			Request(null, name, input_param);
+		}
+
+		/// <summary>
+		/// Запрашивает исполнение сетевого метода на удаленном узле без ожидания результата.
+		/// </summary>
+		/// <param name="node_info">Информация об удаленном сетевом узле.</param>
+		/// <param name="name">Название метода.</param>
+		/// <param name="input_param">Входной параметр.</param>
+		public override void Request(NodeInfo node_info, string name, object input_param)
+		{
+			var json_input = JsonConvert.SerializeObject(input_param);
+			var str = string.Format("{0}\n{1}\n", name, json_input);
+			var message = Encoding.ASCII.GetBytes(str);
+			SendUdpMessage(message, node_info);
+		}
+
+		#endregion
+
+		#region Methods / Private
+
 		/// <summary>
 		/// Вызывает метод и возвращает результат его исполнения.
 		/// </summary>
@@ -143,7 +193,6 @@ namespace Core.Model.Network.Base.Service
 			return InvokeWebMethod(url_path, new[] { input });
 		}
 
-
 		/// <summary>
 		/// Принимает UDP сообщения.
 		/// </summary>
@@ -163,5 +212,6 @@ namespace Core.Model.Network.Base.Service
 			InvokeWebMethod(name, json_input);
 		}
 
+		#endregion
 	}
 }

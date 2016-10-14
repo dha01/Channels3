@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -95,7 +94,7 @@ namespace Core.Model.Network.Service
 		#region Methods / Public
 
 		/// <summary>
-		/// Добавляет сетевой методод.
+		/// Добавляет сетевой метод.
 		/// </summary>
 		/// <param name="root">Корень.</param>
 		/// <param name="method">Метод.</param>
@@ -118,8 +117,8 @@ namespace Core.Model.Network.Service
 			{
 				var content = new StringContent(JsonConvert.SerializeObject(input_param));
 				var response = client.PostAsync(string.Format("http://{0}:{1}/{2}", node_info.URL, node_info.Port, name), content);
-				var responseString = response.Result.Content.ReadAsStringAsync().Result;
-				return JsonConvert.DeserializeObject<T>(responseString);
+				var response_string = response.Result.Content.ReadAsStringAsync().Result;
+				return JsonConvert.DeserializeObject<T>(response_string);
 			}
 		}
 

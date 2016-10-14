@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Core.Model.Data.DataModel;
 using Core.Model.Data.Service;
 using Core.Model.Invoke.Base.DataModel;
 using Core.Model.Invoke.Local.CSharp.Service;
 using Core.Model.Invoke.Remote.Service;
-using Core.Model.Methods.Base.DomainModel;
 using Core.Model.Methods.Base.Service;
 using Core.Model.Methods.CSharp.DomainModel;
-using Core.Model.Methods.CSharp.Service;
 using Core.Model.Network.Service;
 
 namespace Core.Model.Invoke.Base.Service
@@ -20,44 +16,56 @@ namespace Core.Model.Invoke.Base.Service
 	/// </summary>
 	public class InvokeServiceFactory : IInvokeServiceFactory
 	{
+		#region Fields
 
+		/// <summary>
+		/// Сервис для работы и хранения методов.
+		/// </summary>
 		private readonly IMethodService _methodService;
-		
-		private readonly Dictionary<Type, IInvokeService> _serviceDictionary;
 
+		/// <summary>
+		/// Сервис для работы с библиотеками C#.
+		/// </summary>
 		private readonly IAssemblyService _assemblyService;
 
+		/// <summary>
+		/// Сервис координации.
+		/// </summary>
 		private readonly ICoordinationService _coordinationService;
 
-		//private readonly ISendRequestService _sendRequestService;
-
+		/// <summary>
+		/// Сервис хранения данных.
+		/// </summary>
 		private readonly IDataService<DataInvoke> _dataService;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		private readonly IWebServerService _webServerService;
 
-		public void AddOnDequeueEvent(Action<DataInvoke> action)
-		{
-			foreach (var service in _serviceDictionary)
-			{
-				service.Value.OnAfterInvoke += action;
-			}
-		}
+		/// <summary>
+		/// Словарь сервисов исполнения.
+		/// </summary>
+		private readonly Dictionary<Type, IInvokeService> _serviceDictionary;
+
+		#endregion
+
+		#region Constructor
 
 		/// <summary>
 		/// Инициализирует сервисы.
 		/// </summary>
-		/// <param name="method_service"></param>
-		/// <param name="assembly_service"></param>
-		/// <param name="coordination_service"></param>
-		/// <param name="send_request_service"></param>
-		/// <param name="data_service"></param>
+		/// <param name="method_service">Сервис для работы и хранения методов.</param>
+		/// <param name="assembly_service">Сервис для работы с библиотеками C#.</param>
+		/// <param name="coordination_service">Сервис координации.</param>
+		/// <param name="data_service">Сервис хранения данных.</param>
+		/// <param name="web_server_service"></param>
 		public InvokeServiceFactory(IMethodService method_service, IAssemblyService assembly_service, ICoordinationService coordination_service,
 			IDataService<DataInvoke> data_service, IWebServerService web_server_service)
 		{
 			_methodService = method_service;
 			_assemblyService = assembly_service;
 			_coordinationService = coordination_service;
-			//_sendRequestService = send_request_service;
 			_webServerService = web_server_service;
 
 			var remote_invoke_service = new RemoteInvokeService(_coordinationService, _webServerService);
@@ -69,6 +77,22 @@ namespace Core.Model.Invoke.Base.Service
 				{typeof(InvokeCSharpService), invoke_c_sharp_method},
 				{typeof(CSharpMethod), invoke_c_sharp_method}
 			};
+		}
+
+		#endregion
+
+		#region Methods/Public
+
+		/// <summary>
+		/// Добавляет событие при извлечении из очереди.
+		/// </summary>
+		/// <param name="action">Событие.</param>
+		public void AddOnDequeueEvent(Action<DataInvoke> action)
+		{
+			foreach (var service in _serviceDictionary)
+			{
+				service.Value.OnAfterInvoke += action;
+			}
 		}
 		
 		/// <summary>
@@ -98,5 +122,7 @@ namespace Core.Model.Invoke.Base.Service
 
 			throw new Exception(string.Format("InvokeServiceFactory.GetInvokeService -> Тип {0} недопустим.", invoked_data.InvokeType));
 		}
+
+		#endregion
 	}
 }

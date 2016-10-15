@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Core.Model.Data.DataModel;
 using Core.Model.InvokeMethods.Base.Invoke.DataModel;
 using Core.Model.InvokeMethods.Base.Invoke.Service;
@@ -35,14 +36,18 @@ namespace Core.Model.Data.Service
 
 		//private readonly ISendRequestService _sendRequestService;
 
-		private readonly ConcurrentDictionary<Guid, ManualResetEvent> _requestedResults;
+		private readonly ConcurrentDictionary<Guid, WaitResult> _requestedResults;
 
 		private readonly IWebServerService _webServerService;
+
+		private readonly ICoordinationService _coordinationService;
 
 		/// <summary>
 		/// Тип исполнения.
 		/// </summary>
 		private readonly InvokeType _invokeType;
+
+		public bool InvokeNotReadyData { get; set; }
 
 		#endregion
 
@@ -54,7 +59,7 @@ namespace Core.Model.Data.Service
 		/// <param name="invoke_type">Тип исполнения.</param>
 		/// <param name="invoke_service_factory">Фабрика сервисов исполнения.</param>
 		/// <param name="data_service">Сервис для работы с данными.</param>
-		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, IWebServerService web_server_service)
+		public DataCollectorService(InvokeType invoke_type, IInvokeServiceFactory invoke_service_factory, IDataService<DataInvoke> data_service, IWebServerService web_server_service, ICoordinationService coordination_service)
 		{
 			_invokeType = invoke_type;
 			_queueInvoker = new QueueInvoker<DataInvoke>(OnDequeue);
@@ -62,9 +67,11 @@ namespace Core.Model.Data.Service
 			_invokeServiceFactory.AddOnDequeueEvent(OnAfterInvoke);
 			_dataService = data_service;
 			//_sendRequestService = send_request_service;
-			_requestedResults = new ConcurrentDictionary<Guid, ManualResetEvent>();
+			_requestedResults = new ConcurrentDictionary<Guid, WaitResult>();
 
 			_webServerService = web_server_service;
+
+			_coordinationService = coordination_service;
 		}
 
 		#endregion
@@ -80,6 +87,12 @@ namespace Core.Model.Data.Service
 			_queueInvoker.Enqueue(invoked_data);
 		}
 
+		public class WaitResult
+		{
+			public ManualResetEvent ManualResetEvent { get; set; }
+			public Task RequestedData { get; set; }
+		}
+
 		/// <summary>
 		/// Возвращает результат вычисления вычисляемых данных с указанным идентфииктаором.
 		/// </summary>
@@ -91,12 +104,17 @@ namespace Core.Model.Data.Service
 			{
 				IsRequestData = true
 			};
-			
-			var manual_reset_event = new ManualResetEvent(false);
-			_requestedResults.TryAdd(guid, manual_reset_event);
+
+			var mer = new WaitResult
+			{
+				ManualResetEvent = new ManualResetEvent(false)
+			};
+			//var manual_reset_event = new ManualResetEvent(false);
+			_requestedResults.TryAdd(guid, mer);
+
 			Invoke(request_data);
 
-			manual_reset_event.WaitOne();
+			mer.ManualResetEvent.WaitOne();
 			var result = _dataService.Get(guid);
 			if (result == null || !result.HasValue)
 			{
@@ -180,15 +198,35 @@ namespace Core.Model.Data.Service
 				{
 					if (exists_value == null || !exists_value.HasValue)
 					{
+						// TODO: нужно разобраться с причиной почему не работает как надо
+						/*var wr = _requestedResults[invoked_data.Id];
+						if (wr.RequestedData == null)
+						{
+							var node = _coordinationService.GetSuitableNode(invoked_data.Id);
+							if (node != null)
+							{
+								wr.RequestedData = Task.Run(() =>
+								{
+									var r = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
+									exists_value.Value = r.Value;
+
+									Console.WriteLine("{0} {1} Получен результат исполнения удаленного метода {2}: результат {3}",
+										Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), r.Method.MethodName,
+										r.Value);
+									wr.ManualResetEvent.Set();
+								});
+							}
+						}*/
+						
 						Invoke(invoked_data);
 						return;
 					}
 
-					ManualResetEvent requested_result;
+					WaitResult requested_result;
 					_requestedResults.TryRemove(invoked_data.Id, out requested_result);
 					if (requested_result != null)
 					{
-						requested_result.Set();
+						requested_result.ManualResetEvent.Set();
 					}
 					return;
 				}
@@ -214,7 +252,14 @@ namespace Core.Model.Data.Service
 				switch (invoked_data.DataState)
 				{
 					case DataState.NotReadyForInvoke:
-						CheckNotReadyValue(invoked_data);
+						if (InvokeNotReadyData)
+						{
+							_invokeServiceFactory.GetInvokeService(invoked_data, _invokeType).Invoke(invoked_data);
+						}
+						else
+						{
+							CheckNotReadyValue(invoked_data);
+						}
 						break;
 					case DataState.ReadyForInvoke:
 						_invokeServiceFactory.GetInvokeService(invoked_data, _invokeType).Invoke(invoked_data);

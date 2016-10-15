@@ -68,14 +68,14 @@ namespace Core.Model.InvokeMethods.Base.Invoke.Service
 		/// <param name="data_service">Сервис хранения данных.</param>
 		/// <param name="web_server_service"></param>
 		public InvokeServiceFactory(IMethodService method_service, IAssemblyService assembly_service, ICoordinationService coordination_service,
-			IDataService<DataInvoke> data_service, IWebServerService web_server_service)
+			IDataService<DataInvoke> data_service, IWebServerService web_server_service, RemoteInvokeService remote_invoke_service)
 		{
 			_methodService = method_service;
 			_assemblyService = assembly_service;
 			_coordinationService = coordination_service;
 			_webServerService = web_server_service;
 
-			_remoteInvokeService = new RemoteInvokeService(_coordinationService, _webServerService);
+			_remoteInvokeService = remote_invoke_service;// new RemoteInvokeService(_coordinationService, _webServerService);
 			var invoke_c_sharp_method = new InvokeCSharpService(_assemblyService, _methodService, data_service);
 			var invoke_executable_file = new InvokeExecutableFileService(new ExecutableFileMethodService(), data_service);
 			

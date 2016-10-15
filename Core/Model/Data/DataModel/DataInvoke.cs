@@ -76,6 +76,11 @@ namespace Core.Model.Data.DataModel
 			return new DataInvoke(data);
 		}
 
+		public static implicit operator DataInvoke(string data)
+		{
+			return new DataInvoke(data);
+		}
+
 		public DataInvoke<T> SetType<T>()
 		{
 			DataInvoke<T> result;

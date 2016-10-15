@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Model.Data.DataModel;
 using Core.Model.Network.Base.DataModel;
 
 namespace Core.Model.Network.Service
@@ -13,7 +14,10 @@ namespace Core.Model.Network.Service
 	public interface ICoordinationService
 	{
 		List<NodeServerInfo> GetAvailableNodeList();
-		NodeServerInfo GetSuitableNode();
+
+		void SetSituableNode(Guid id, NodeServerInfo node_server_info);
+		NodeServerInfo GetSuitableNode(Guid id);
+		NodeServerInfo GetSuitableNode(DataInvoke data_invoke);
 		void AddNode(NodeServerInfo node);
 	}
 }

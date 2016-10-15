@@ -25,6 +25,11 @@ namespace Core.Model.InvokeMethods.Remote.Service
 		/// </summary>
 		private readonly ICoordinationService _coordinationService;
 
+		/// <summary>
+		/// Не запрашивать результат сразу же после отправки.
+		/// </summary>
+		public bool IsNotRequestResultAfterSend { get; set; }
+
 		#endregion
 
 		#region Constructor
@@ -75,7 +80,7 @@ namespace Core.Model.InvokeMethods.Remote.Service
 			
 			try
 			{
-				node = _coordinationService.GetSuitableNode();
+				node = _coordinationService.GetSuitableNode(invoked_data);
 			}
 			catch (Exception e)
 			{
@@ -85,11 +90,17 @@ namespace Core.Model.InvokeMethods.Remote.Service
 			try
 			{
 				NodeServiceBase.AddData(_webServerService, node, invoked_data);
-				
-				var result = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
-				invoked_data.Value = result.Value;
 
-				Console.WriteLine("{0} {1} Получен результат исполнения удаленного метода {2}: результат {3}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), invoked_data.Method.MethodName, invoked_data.Value);
+				_coordinationService.SetSituableNode(invoked_data.Id, node);
+
+				// TODO: нужно разобраться с причиной почему не работает как надо
+				/*if (!IsNotRequestResultAfterSend)
+				{*/
+					var result = NodeServiceBase.GetData(_webServerService, node, invoked_data.Id);
+					invoked_data.Value = result.Value;
+
+					Console.WriteLine("{0} {1} Получен результат исполнения удаленного метода {2}: результат {3}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), invoked_data.Method.MethodName, invoked_data.Value);
+				/*}*/
 			}
 			catch (Exception e)
 			{

@@ -118,6 +118,17 @@ namespace Core.Model.InvokeMethods.Local.CSharp.Invoke.Service
 			try
 			{
 				var inputs = invoked_data.InputIds.Select(x => _dataService.Get(x).Value).ToArray();
+
+				var types = method.MethodInfo.GetParameters();
+
+				for (var i = 0; i < inputs.Length; i++)
+				{
+					if (inputs[i].GetType() != types[i].ParameterType)
+					{
+						inputs[i] = (int)Convert.ChangeType(inputs[i], types[i].ParameterType);
+					}
+				}
+				
 				var obj = Activator.CreateInstance(method.Type);
 				invoked_data.Value = method.MethodInfo.Invoke(obj, inputs);
 				Console.WriteLine("{0} {1} Исполнен метод {2}: результат {3}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp(), invoked_data.Method.MethodName, invoked_data.Value);

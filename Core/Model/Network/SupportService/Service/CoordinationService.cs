@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Model.Data.DataModel;
 using Core.Model.Network.Base.DataModel;
 
 namespace Core.Model.Network.Service
@@ -17,9 +18,12 @@ namespace Core.Model.Network.Service
 
 		private int _currentNodeCount = 0;
 
+		private Dictionary<Guid, NodeServerInfo> _saveResults;
+
 		public CoordinationService()
 		{
 			_nodeList = new List<NodeServerInfo>();
+			_saveResults = new Dictionary<Guid, NodeServerInfo>();
 		}
 
 		public List<NodeServerInfo> GetAvailableNodeList()
@@ -27,20 +31,41 @@ namespace Core.Model.Network.Service
 			return _nodeList;
 		}
 
+		public void SetSituableNode(Guid id, NodeServerInfo node_server_info)
+		{
+			_saveResults.Add(id, node_server_info);
+		}
+
+		public NodeServerInfo GetSuitableNode(Guid id)
+		{
+			if (_saveResults.ContainsKey(id))
+			{
+				return _saveResults[id];
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// Возвращает подходящий вычислительный узел.
 		/// </summary>
 		/// <returns></returns>
-		public NodeServerInfo GetSuitableNode()
+		public NodeServerInfo GetSuitableNode(DataInvoke data_invoke)
 		{
+			var result = GetSuitableNode(data_invoke.Id);
+			if (result != null)
+			{
+				return result;
+			}
+			
 			if (!_nodeList.Any())
 			{
 				throw new Exception("Отсутствуют доступные узлы.");
 			}
 
 			_currentNodeCount++;
+			result = _nodeList[_currentNodeCount%_nodeList.Count];
 
-			return _nodeList[_currentNodeCount % _nodeList.Count];
+			return result;
 		}
 
 		/// <summary>

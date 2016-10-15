@@ -8,6 +8,8 @@ namespace Core.Model.Data.Service
 	/// </summary>
 	public interface IDataCollectorService
 	{
+		bool InvokeNotReadyData { get; set; }
+		
 		/// <summary>
 		/// Новый узел для вычисления.
 		/// </summary>

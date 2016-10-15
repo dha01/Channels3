@@ -6,6 +6,7 @@ using Core.Model.InvokeMethods.Base.Invoke.Service;
 using Core.Model.InvokeMethods.Base.Methods.Service;
 using Core.Model.InvokeMethods.Local.CSharp.Assembly.Service;
 using Core.Model.InvokeMethods.Local.CSharp.Methods.Service;
+using Core.Model.InvokeMethods.Remote.Service;
 using Core.Model.Network.Base.DataModel;
 using Core.Model.Network.Service;
 using Newtonsoft.Json;
@@ -56,6 +57,11 @@ namespace Core.Model.Network.Node.Service
 		/// </summary>
 		protected IWebServerService _webServerService;
 
+		/// <summary>
+		/// Сервис приема и передачи данных по сети.
+		/// </summary>
+		protected RemoteInvokeService _remoteInvokeService;
+
 		#endregion
 
 		#region Constructor
@@ -79,8 +85,10 @@ namespace Core.Model.Network.Node.Service
 
 			_webServerService = web_server_service;
 			_webServerService.InitWebMethods(this);
-			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService);
-			_dataCollectorService = new DataCollectorService(invoke_type, _invokeServiceFactory, _dataService, _webServerService);
+			_remoteInvokeService = new RemoteInvokeService(_coordinationService, _webServerService);
+
+			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService, _remoteInvokeService);
+			_dataCollectorService = new DataCollectorService(invoke_type, _invokeServiceFactory, _dataService, _webServerService, _coordinationService);
 		}
 
 		public NodeServiceBase(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, IAssemblyService c_sharp_assembly_service)
@@ -96,7 +104,9 @@ namespace Core.Model.Network.Node.Service
 
 			_webServerService = web_server_service;
 			_webServerService.InitWebMethods(this);
-			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService);
+			_remoteInvokeService = new RemoteInvokeService(_coordinationService, _webServerService);
+
+			_invokeServiceFactory = new InvokeServiceFactory(_methodService, _cSharpAssemblyService, _coordinationService, _dataService, _webServerService, _remoteInvokeService);
 		}
 
 		public NodeServiceBase(IDataService<DataInvoke> data_service, IAssemblyService c_sharp_assembly_service,

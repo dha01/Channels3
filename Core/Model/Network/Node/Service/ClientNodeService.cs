@@ -113,6 +113,10 @@ namespace Core.Model.Network.Node.Service
 				ServerType = ServerType.Client
 			};
 			_notificationService.RunRegularNotify(node, 5000);
+
+			// TODO: нужно разобраться с причиной почему не работает как надо
+			/*_dataCollectorService.InvokeNotReadyData = true;
+			_remoteInvokeService.IsNotRequestResultAfterSend = true;*/
 		}
 
 		public ClientNodeService(IWebServerService web_server_service, IDataService<DataInvoke> data_service, IDataCollectorService data_collector_service, IAssemblyService c_sharp_assembly_service, INotificationService notification_service)

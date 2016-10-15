@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Core.Model.Data.DataModel;
 using Core.Model.InvokeMethods.Local.CSharp.Methods.DataModel;
 using Core.Model.InvokeMethods.Local.ExecutableFile.Methods.DataModel;
 using Core.Model.Network.Node.Service;
@@ -57,10 +58,23 @@ namespace ClientServer
 						Console.WriteLine("pid {0} ip {1} Запущен вычислительный сервер.", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
 						break;
 					case "Sum":
-						Console.WriteLine(Sum(int.Parse(command[1]), int.Parse(command[2])));
+						Console.WriteLine("Результат: {0}", Sum(int.Parse(command[1]), int.Parse(command[2])));
+						break;
+					case "Sum256":
+						Console.WriteLine("Результат: {0}", Sum128(int.Parse(command[1]), int.Parse(command[2])));
 						break;
 					case "Text":
-						Console.WriteLine(Text());
+						Console.WriteLine("Результат: {0}", Text(string.Join(" ", command.Skip(1))));
+						break;
+					case "Run":
+						var method = new ExecutableFileMethod
+						{
+							MethodName = command[1],
+							InputParamsTypeNames = new[] { typeof(string).FullName }
+						};
+						var arguments = string.Join(" ", command.Skip(2));
+						var result = method.Invoke(arguments);
+						Console.WriteLine("Результат: {0}", result.Result());
 						break;
 				}
 			}
@@ -81,7 +95,7 @@ namespace ClientServer
 			_invokeNodeService = new InvokeNodeService();
 		}
 
-		static string Text()
+		static string Text(string text)
 		{
 			var method = new ExecutableFileMethod
 			{
@@ -89,10 +103,10 @@ namespace ClientServer
 				Version = "1.0.0.0",
 				TypeName = "",
 				MethodName = "Text.exe",
-				InputParamsTypeNames = new string[] { }
+				InputParamsTypeNames = new [] { typeof(string).FullName }
 			};
 
-			return method.Invoke<string>().Result();
+			return method.Invoke<string>(text).Result();
 		}
 
 		static int Sum(int a, int b)
@@ -103,10 +117,60 @@ namespace ClientServer
 				Version = "1.0.0.0",
 				TypeName = "Core.Model.BasicMethods.Math.Service.Simple",
 				MethodName = "Sum",
-				InputParamsTypeNames = new[] { "System.Int32", "System.Int32" }
+				InputParamsTypeNames = new[] { typeof(int).FullName, typeof(int).FullName }
 			};
 
 			return method.Invoke<int>(a, b).Result();
+		}
+
+		static CSharpMethod MethodSum = new CSharpMethod()
+		{
+			Namespace = "Core",
+			Version = "1.0.0.0",
+			TypeName = "Core.Model.BasicMethods.Math.Service.Simple",
+			MethodName = "Sum",
+			InputParamsTypeNames = new[] { typeof(int).FullName, typeof(int).FullName }
+		};
+
+		static DataInvoke<int>[] Sum(DataInvoke<int>[] array)
+		{
+			var half_size = array.Length/2;
+			var arr = new DataInvoke<int>[half_size];
+			
+			for (int i = 0; i < half_size; i++)
+			{
+				var a = array[i];
+				var b = array[i + half_size];
+				
+				arr[i] = MethodSum.Invoke<int>(a, b);
+			}
+
+			return arr;
+		}
+
+		static int Sum128(int a, int b)
+		{
+			var method = new CSharpMethod()
+			{
+				Namespace = "Core",
+				Version = "1.0.0.0",
+				TypeName = "Core.Model.BasicMethods.Math.Service.Simple",
+				MethodName = "Sum",
+				InputParamsTypeNames = new[] { typeof(int).FullName, typeof(int).FullName }
+			};
+
+			DataInvoke<int>[] arr = new DataInvoke<int>[128];
+			for (int i = 0; i < 128; i++)
+			{
+				arr[i] = method.Invoke<int>(a, b);
+			}
+
+			while (arr.Length > 1)
+			{
+				arr = Sum(arr);
+			}
+
+			return arr[0].Result();
 		}
 	}
 }

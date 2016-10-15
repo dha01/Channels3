@@ -38,11 +38,13 @@ namespace Core.Model.InvokeMethods.Local.ExecutableFile.Methods.Service
 		public MethodBase GetMethod(MethodBase method_base)
 		{
 			var default_path = System.Configuration.ConfigurationManager.AppSettings["DefaultExecutableFilesPath"];
-			
+
 			var path = string.Format(@"{0}/{1}{2}",
 				default_path, 
 				string.IsNullOrEmpty(method_base.Namespace) ? "" : method_base.Namespace + "/", 
 				method_base.MethodName);
+
+			path = Path.GetFullPath(path);
 
 			if (!File.Exists(path))
 			{

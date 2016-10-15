@@ -116,7 +116,7 @@ namespace Core.Model.InvokeMethods.Local.ExecutableFile.Invoke.Service
 						Arguments = arguments,
 						RedirectStandardOutput = true,
 						CreateNoWindow = is_os_windows,
-						UseShellExecute = !is_os_windows
+						UseShellExecute = false
 					}
 				};
 
@@ -131,6 +131,7 @@ namespace Core.Model.InvokeMethods.Local.ExecutableFile.Invoke.Service
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("InvokeExecutableFileService->InvokeMethod Ошибка запуске исполняемого файла: {0}", e.Message);
 				invoked_data.Value = e.InnerException;
 			}
 

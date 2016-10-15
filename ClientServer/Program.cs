@@ -15,7 +15,7 @@ namespace ClientServer
 		
 		static void Main(string[] args)
 		{
-			ClientNodeExtension.Init();
+			
 			
 			Console.WriteLine("OS : {0}", Environment.OSVersion);
 			Console.WriteLine("pid {0} ip {1}", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
@@ -48,6 +48,10 @@ namespace ClientServer
 						{
 							return ExecCommand(command.Skip(2).ToArray());
 						}
+						break;
+					case "RunClient":
+						ClientNodeExtension.Init();
+						Console.WriteLine("pid {0} ip {1} Запущено клиентское приложение.", Environment.GetEnvironmentVariables()["SLURM_PROCID"], WebServerServiceBase.GetLocalIp());
 						break;
 					case "RunCoordination":
 						RunCoordinationServer();
